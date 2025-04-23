@@ -1,12 +1,13 @@
 {
-    "name": "eclipsephp/plugin-template",
-    "description": "Eclipse template for Filament plugins",
+    "name": "eclipsephp/common",
+    "description": "Common non-opinionated package for Eclipse plugins",
     "keywords": [
         "eclipse",
         "filament",
+        "plugin",
         "laravel"
     ],
-    "homepage": "https://github.com/DataLinx/eclipsephp-plugin-template",
+    "homepage": "https://github.com/DataLinx/eclipsephp-common",
     "type": "library",
     "license": "MIT",
     "authors": [
@@ -26,9 +27,7 @@
     "prefer-stable": true,
     "autoload": {
         "psr-4": {
-            "Eclipse\\PluginTemplate\\": "src/",
-            "Eclipse\\PluginTemplate\\Factories\\": "database/factories/",
-            "Eclipse\\PluginTemplate\\Seeders\\": "database/seeders/"
+            "Eclipse\\Common\\": "src/"
         }
     },
     "autoload-dev": {
@@ -74,12 +73,5 @@
             "@php vendor/bin/testbench vendor:publish --tag='filament-shield-config'",
             "@php vendor/bin/testbench package:sync-skeleton"
         ]
-    },
-    "extra": {
-        "laravel": {
-            "providers": [
-                "Eclipse\\PluginTemplate\\PluginTemplateServiceProvider"
-            ]
-        }
     }
 }

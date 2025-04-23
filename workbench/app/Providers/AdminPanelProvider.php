@@ -3,7 +3,6 @@
 namespace Workbench\App\Providers;
 
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
-use Eclipse\PluginTemplate\PluginTemplate;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -45,7 +44,6 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->plugins([
                 FilamentShieldPlugin::make(),
-                PluginTemplate::make(),
             ])
             ->pages([
                 Dashboard::class,

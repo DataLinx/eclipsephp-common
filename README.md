@@ -15,6 +15,7 @@ This package contains all common non-opinionated code that is used in our Eclips
 - PHP >= 8.2 (due to Pest 3 requirement)
 - Filament 3
 - Filament Shield plugin (to manage permissions)
+- Laravel Scout
 
 See [composer.json](composer.json) for details.
 

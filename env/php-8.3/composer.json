@@ -1,5 +1,5 @@
 {
-    "name": "eclipsephp/plugin-template",
+    "name": "eclipsephp/common",
     "require": {
         "wikimedia/composer-merge-plugin": "dev-master"
     },
@@ -9,11 +9,6 @@
                 "/usr/local/src/composer.json"
             ],
             "merge-scripts": true
-        },
-        "laravel": {
-            "providers": [
-                "Eclipse\\PluginTemplate\\PluginTemplateServiceProvider"
-            ]
         }
     },
     "config": {
@@ -25,9 +20,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Eclipse\\PluginTemplate\\": "src/",
-            "Eclipse\\PluginTemplate\\Factories\\": "database/factories/",
-            "Eclipse\\PluginTemplate\\Seeders\\": "database/seeders/"
+            "Eclipse\\Common\\": "src/"
         }
     },
     "autoload-dev": {

@@ -1,11 +1,12 @@
-name: eclipsephp-plugin-template-8.3
+#file: noinspection ComposeUnknownKeys
+name: eclipsephp-common-8.3
 services:
   appserver:
     type: php:custom
     via: cli
     app_mount: delegated
     overrides:
-      image: slimdeluxe/php:8.3-v1.0
+      image: slimdeluxe/php:8.3-v1.1
       volumes:
         # Mount the project root directory to /app
         - "../..:/app"

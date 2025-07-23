@@ -59,26 +59,26 @@ abstract class Plugin implements \Filament\Contracts\Plugin
      */
     public function getPath(?string $path = null): string
     {
-        return $this->basePath . ($path ? "/$path" : "");
+        return $this->basePath.($path ? "/$path" : '');
     }
 
     /**
      * Get the absolute path to the panel directory for the specified class.
      *
-     * @param string $panelName Panel name (e.g. `Admin`)
-     * @param string $classDir Class dir (e.g. `Resource`)
+     * @param  string  $panelName  Panel name (e.g. `Admin`)
+     * @param  string  $classDir  Class dir (e.g. `Resource`)
      * @return string Absolute path for the specified class (e.g. `/app/vendor/eclipsephp/cms-plugin/src/Admin/Filament/Resource`)
      */
     protected function getPanelPath(string $panelName, string $classDir): string
     {
-        return $this->getPath('src') ."/$panelName/Filament/$classDir";
+        return $this->getPath('src')."/$panelName/Filament/$classDir";
     }
 
     /**
      * Get the full panel namespace for the specified class.
      *
-     * @param string $panelName Panel name (e.g. `Admin`)
-     * @param string $classDir Class dir (e.g. `Resource`)
+     * @param  string  $panelName  Panel name (e.g. `Admin`)
+     * @param  string  $classDir  Class dir (e.g. `Resource`)
      * @return string Full namespace for the specified class (e.g. `Eclipse\Cms\Admin\Resource`)
      */
     protected function getPanelNamespace(string $panelName, string $classDir): string

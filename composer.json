@@ -75,5 +75,12 @@
             "@php vendor/bin/testbench vendor:publish --tag='filament-shield-config'",
             "@php vendor/bin/testbench package:sync-skeleton"
         ]
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Eclipse\\Common\\CommonServiceProvider"
+            ]
+        }
     }
 }

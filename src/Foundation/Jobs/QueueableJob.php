@@ -40,7 +40,7 @@ abstract class QueueableJob implements ShouldQueue
      *
      * This is called when the job is getting queued in the main process, so any context fetching (user, locale...) will work.
      */
-    public function __construct(string $locale = null)
+    public function __construct(?string $locale = null)
     {
         $this->locale = $locale ?? app()->getLocale();
 

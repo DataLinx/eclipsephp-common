@@ -16,6 +16,11 @@ abstract class QueueableJob implements ShouldQueue
     use Queueable;
 
     /**
+     * Locale that is used for texts, important for user notifications etc.
+     */
+    public string $locale;
+
+    /**
      * User that created the job. If it was created in the console or by the scheduler, no dispatcher is set.
      */
     public ?Authenticatable $dispatcher;
@@ -32,12 +37,18 @@ abstract class QueueableJob implements ShouldQueue
 
     /**
      * Create a new job instance.
+     *
+     * This is called when the job is getting queued in the main process, so any context fetching (user, locale...) will work.
      */
-    public function __construct()
+    public function __construct(string $locale = null)
     {
+        $this->locale = $locale ?? app()->getLocale();
+
         if (auth()->check()) {
             $this->dispatcher = auth()->user();
         }
+
+        $this->queued();
     }
 
     /**
@@ -45,17 +56,19 @@ abstract class QueueableJob implements ShouldQueue
      */
     public function handle(): void
     {
-        $this->execute();
-
-        $this->status = JobStatus::COMPLETED;
-
-        if (isset($this->dispatcher)) {
-            $this->notify();
+        try {
+            Log::info('Job {job} started.', ['job' => static::class]);
+            $this->execute();
+            $this->completed();
+        } catch (Throwable $exception) {
+            $this->failed($exception);
         }
     }
 
     /**
      * Execute the job.
+     *
+     * @throws Throwable
      */
     abstract protected function execute(): void;
 
@@ -67,7 +80,9 @@ abstract class QueueableJob implements ShouldQueue
         if (isset($this->dispatcher)) {
             // Send user notification to database
             $this->makeNotification()
-                ->sendToDatabase($this->dispatcher);
+                ->seconds(5)
+                ->sendToDatabase($this->dispatcher)
+                ->broadcast($this->dispatcher);
         } else {
             throw new RuntimeException('Cannot send notification — no dispatcher set for job '.static::class);
         }
@@ -75,8 +90,10 @@ abstract class QueueableJob implements ShouldQueue
 
     /**
      * Create the notification instance.
+     *
+     * @return Notification Filament Notification or any descended class
      */
-    protected function makeNotification(): Notification
+    protected function makeNotification(): object
     {
         return Notification::make()
             ->title($this->getNotificationTitle())
@@ -86,9 +103,9 @@ abstract class QueueableJob implements ShouldQueue
     }
 
     /**
-     * Get the job name.
+     * Get the job name for displaying notifications.
      *
-     * Defaults to unqualified class name.
+     * Defaults to unqualified class name. It's recommended to overload this method and return a end-user-friendly translatable name.
      */
     protected function getJobName(): string
     {
@@ -97,14 +114,12 @@ abstract class QueueableJob implements ShouldQueue
 
     /**
      * Get the notification title based on the job status.
+     *
+     *  By default, this returns generic titles. Jobs can overload this function to return a more customized title.
      */
     protected function getNotificationTitle(): string
     {
-        return match ($this->status) {
-            JobStatus::QUEUED => $this->getJobName().' queued.',
-            JobStatus::COMPLETED => $this->getJobName().' successfully completed!',
-            JobStatus::FAILED => $this->getJobName().' failed!',
-        };
+        return __("eclipse-common::jobs.notifications.{$this->status->value}.title", ['job' => $this->getJobName()], $this->locale);
     }
 
     /**
@@ -133,27 +148,61 @@ abstract class QueueableJob implements ShouldQueue
 
     /**
      * Get the notification body based on the job status.
+     *
+     * By default, this returns generic messages. Jobs can overload this function to return a more customized message.
      */
-    protected function getNotificationBody(): ?string
+    protected function getNotificationBody(): string
     {
         return match ($this->status) {
-            JobStatus::FAILED => $this->exception->getMessage(),
-            default => null,
+            JobStatus::QUEUED, JobStatus::COMPLETED => __("eclipse-common::jobs.notifications.{$this->status->value}.message", [], $this->locale),
+            JobStatus::FAILED => __("eclipse-common::jobs.notifications.{$this->status->value}.message", [
+                // Use up to 200 chars of the exception message to prevent "Pusher error: Payload too large.."
+                'exception' => substr($this->exception, 0, 200),
+            ], $this->locale),
         };
+    }
+
+    /**
+     * Function that gets executed when the job is queued.
+     */
+    protected function queued(): void
+    {
+        Log::info('Job {job} queued.', ['job' => static::class]);
+
+        if (isset($this->dispatcher)) {
+            $this->notify();
+        }
+    }
+
+    /**
+     * Function that gets executed when the job is successfully completed.
+     */
+    protected function completed(): void
+    {
+        // Set job status and then output the correct notification title/body
+        $this->status = JobStatus::COMPLETED;
+
+        Log::info('Job {job} completed successfully.', ['job' => static::class]);
+
+        if (isset($this->dispatcher)) {
+            $this->notify();
+        }
     }
 
     /**
      * Handle a job failure.
      */
-    public function failed(?Throwable $exception): void
+    protected function failed(?Throwable $exception): void
     {
         // Set job status and then output the correct notification title/body
         $this->status = JobStatus::FAILED;
 
         $this->exception = $exception;
 
-        Log::error('Error encountered while executing job {job}: {message}', ['job' => static::class, 'message' => $exception->getMessage()]);
+        Log::error('Job {job} encountered an error: {message}', ['job' => static::class, 'message' => $exception->getMessage()]);
 
-        $this->notify();
+        if (isset($this->dispatcher)) {
+            $this->notify();
+        }
     }
 }

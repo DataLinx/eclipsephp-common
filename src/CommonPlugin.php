@@ -8,8 +8,6 @@ class CommonPlugin extends Foundation\Plugins\Plugin
 {
     /**
      * Cluster that is used for grouping app and plugin settings
-     *
-     * @var string|null
      */
     protected ?string $settingsCluster = Settings::class;
 

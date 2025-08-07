@@ -45,6 +45,7 @@
         "filament/filament": "^3.3",
         "filament/spatie-laravel-settings-plugin": "^3.3",
         "laravel/scout": "^10.14",
+        "nben/filament-record-nav": "^1.0",
         "spatie/laravel-package-tools": "^1.19"
     },
     "require-dev": {

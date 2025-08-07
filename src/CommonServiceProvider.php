@@ -14,4 +14,14 @@ class CommonServiceProvider extends PackageServiceProvider
         $package->name(static::$name)
             ->hasTranslations();
     }
+
+    public function register(): self
+    {
+        parent::register();
+
+        // Plugin class must be set as singleton
+        $this->app->singleton(CommonPlugin::class);
+
+        return $this;
+    }
 }

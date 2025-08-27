@@ -23,12 +23,7 @@ abstract class Plugin implements \Filament\Contracts\Plugin
      */
     protected string $id;
 
-    /**
-     * Register any plugin services.
-     *
-     * @throws \Exception
-     */
-    public function register(Panel $panel): void
+    public function __construct()
     {
         $reflection = new ReflectionClass(static::class);
 
@@ -36,7 +31,15 @@ abstract class Plugin implements \Filament\Contracts\Plugin
         $this->basePath = dirname($reflection->getFileName(), 2);
         $this->pluginNamespace = $reflection->getNamespaceName();
         $this->id = Str::of($this->pluginNamespace)->replace('\\', '-')->lower();
+    }
 
+    /**
+     * Register any plugin services.
+     *
+     * @throws \Exception
+     */
+    public function register(Panel $panel): void
+    {
         $panelName = ucfirst($panel->getId());
 
         // Discover all classes, even if directories do not exists — Filament already checks and skips those

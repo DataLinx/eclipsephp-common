@@ -75,13 +75,7 @@ class SliderColumn extends ImageColumn
     protected function isPlaceholderImage(string $url): bool
     {
         $placeholderPatterns = [
-            'data:image/svg+xml;base64,', // SVG placeholders
-            'placeholder',                // URLs containing 'placeholder'
-            'via.placeholder.com',        // Placeholder service
-            'picsum.photos',             // Lorem Picsum placeholder
-            'dummyimage.com',            // Dummy image service
-            'placehold.it',              // Placehold.it service
-            '/placeholder',              // Local placeholder paths
+            'data:image/svg+xml;base64,',
         ];
 
         foreach ($placeholderPatterns as $pattern) {

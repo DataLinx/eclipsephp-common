@@ -43,6 +43,14 @@ class CommonServiceProvider extends PackageServiceProvider
                         $imageUrls = $imageUrls ? [$imageUrls] : [];
                     }
 
+                    $imageUrls = array_filter($imageUrls, function ($url): bool {
+                        return ! str_starts_with($url, 'data:image/svg+xml;base64,');
+                    });
+
+                    if (empty($imageUrls)) {
+                        return [];
+                    }
+
                     $lightboxData = [];
                     foreach ($imageUrls as $index => $imageUrl) {
                         try {

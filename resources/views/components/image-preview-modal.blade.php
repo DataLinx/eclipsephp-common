@@ -211,63 +211,88 @@ function imagePreviewLightbox() {
         },
         
         openFromTable(imageElement) {
-            const rows = document.querySelectorAll('tbody tr');
+            const allRows = document.querySelectorAll('tbody tr');
             this.images = [];
             let clickedIndex = 0;
-            
-            rows.forEach((row) => {
-                const imgContainer = row.querySelector('.fi-ta-image');
-                if (imgContainer) {
-                    const imgs = imgContainer.querySelectorAll('.image-preview-trigger');
-                    
-                    imgs.forEach((img) => {
-                        const configData = img.dataset.lightboxConfig;
-                        
-                        if (configData) {
-                            try {
-                                const lightboxData = JSON.parse(configData);
-                                const matchingImageData = lightboxData.find(data => 
-                                    img.src.includes(data.url) || data.url.includes(img.src) || data.url === img.src
-                                );
-                                
-                                if (matchingImageData) {
-                                    this.images.push({
-                                        url: img.src,
-                                        title: matchingImageData.title || '',
-                                        link: matchingImageData.link || '',
-                                        filename: img.alt || ''
-                                    });
-                                    
-                                    if (img === imageElement) {
-                                        clickedIndex = this.images.length - 1;
-                                    }
-                                    return;
-                                }
-                            } catch (e) {
-                                console.error('Error parsing lightbox config:', e);
-                            }
-                        }
 
-                        const imageData = {
-                            url: img.src,
-                            title: '',
-                            link: '',
-                            filename: img.alt || ''
-                        };
-                        
-                        this.images.push(imageData);
-                        
-                        if (img === imageElement) {
+            const imageGrid = [];
+            let maxColumns = 0;
+
+            allRows.forEach((row) => {
+                const rowImages = row.querySelectorAll('.fi-ta-image .image-preview-trigger');
+                const rowImageArray = Array.from(rowImages);
+                imageGrid.push(rowImageArray);
+                maxColumns = Math.max(maxColumns, rowImageArray.length);
+            });
+            
+            let clickedRowIndex = -1;
+            let clickedColIndex = -1;
+            
+            imageGrid.forEach((rowImages, rowIndex) => {
+                rowImages.forEach((img, colIndex) => {
+                    if (img === imageElement) {
+                        clickedRowIndex = rowIndex;
+                        clickedColIndex = colIndex;
+                    }
+                });
+            });
+            
+            imageGrid.forEach((rowImages, rowIndex) => {
+                rowImages.forEach((img, colIndex) => {
+                    this.addImageToCollection(img, imageElement, () => {
+                        if (rowIndex === clickedRowIndex && colIndex === clickedColIndex) {
                             clickedIndex = this.images.length - 1;
                         }
                     });
-                }
+                });
             });
             
             if (this.images.length > 0) {
                 this.currentIndex = clickedIndex;
                 this.updateCurrentImage();
                 this.open();
+            }
+        },
+        
+        addImageToCollection(img, imageElement, onMatch) {
+            const configData = img.dataset.lightboxConfig;
+            
+            if (configData) {
+                try {
+                    const lightboxData = JSON.parse(configData);
+                    const matchingImageData = lightboxData.find(data => 
+                        img.src.includes(data.url) || data.url.includes(img.src) || data.url === img.src
+                    );
+                    
+                    if (matchingImageData) {
+                        this.images.push({
+                            url: img.src,
+                            title: matchingImageData.title || '',
+                            link: matchingImageData.link || '',
+                            filename: img.alt || ''
+                        });
+                        
+                        if (img === imageElement) {
+                            onMatch();
+                        }
+                        return;
+                    }
+                } catch (e) {
+                    console.error('Error parsing lightbox config:', e);
+                }
+            }
+
+            const imageData = {
+                url: img.src,
+                title: '',
+                link: '',
+                filename: img.alt || ''
+            };
+            
+            this.images.push(imageData);
+            
+            if (img === imageElement) {
+                onMatch();
             }
         },
         

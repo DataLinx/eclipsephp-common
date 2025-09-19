@@ -2,9 +2,10 @@
 
 namespace Eclipse\Common;
 
+use Eclipse\Common\Foundation\Plugins\Plugin;
 use Eclipse\Common\Admin\Filament\Clusters\Settings;
 
-class CommonPlugin extends Foundation\Plugins\Plugin
+class CommonPlugin extends Plugin
 {
     /**
      * Cluster that is used for grouping app and plugin settings

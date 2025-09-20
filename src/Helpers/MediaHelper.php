@@ -1,6 +1,6 @@
 <?php
 
-namespace Eclipse\Common\Foundation\Helpers;
+namespace Eclipse\Common\Helpers;
 
 class MediaHelper
 {

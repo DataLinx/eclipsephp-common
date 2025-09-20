@@ -1,44 +1,55 @@
 <?php
 
-namespace Eclipse\Common\Admin\Filament\Tables\Columns;
+namespace Eclipse\Common\Filament\Tables\Columns;
 
 use Closure;
-use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Columns\ImageColumn as BaseImageColumn;
 use Illuminate\Database\Eloquent\Model;
 
-class SliderColumn extends ImageColumn
+class ImageColumn extends BaseImageColumn
 {
     protected mixed $titleCallback = null;
 
     protected mixed $linkCallback = null;
 
+    protected bool $previewEnabled = false;
+
+    public function preview(bool $condition = true): static
+    {
+        $this->previewEnabled = $condition;
+
+        if ($this->previewEnabled) {
+            $this->extraImgAttributes(function (Model $record, $column): array {
+                $imageUrls = $this->getImageUrls($column);
+
+                if (empty($imageUrls)) {
+                    return [];
+                }
+
+                $lightboxData = [];
+                foreach ($imageUrls as $imageUrl) {
+                    $lightboxData[] = [
+                        'url' => $imageUrl,
+                        'title' => $this->getTitle($record),
+                        'link' => $this->getLink($record),
+                        'filename' => basename($imageUrl),
+                    ];
+                }
+
+                return [
+                    'class' => 'cursor-pointer image-preview-trigger hover:opacity-75 transition-opacity',
+                    'onclick' => 'event.stopPropagation(); return false;',
+                    'data-lightbox-config' => json_encode($lightboxData),
+                ];
+            });
+        }
+
+        return $this;
+    }
+
     protected function setUp(): void
     {
         parent::setUp();
-
-        $this->extraImgAttributes(function (Model $record, $column): array {
-            $imageUrls = $this->getImageUrls($column);
-
-            if (empty($imageUrls)) {
-                return [];
-            }
-
-            $lightboxData = [];
-            foreach ($imageUrls as $imageUrl) {
-                $lightboxData[] = [
-                    'url' => $imageUrl,
-                    'title' => $this->getTitle($record),
-                    'link' => $this->getLink($record),
-                    'filename' => basename($imageUrl),
-                ];
-            }
-
-            return [
-                'class' => 'cursor-pointer image-preview-trigger hover:opacity-75 transition-opacity',
-                'onclick' => 'event.stopPropagation(); return false;',
-                'data-lightbox-config' => json_encode($lightboxData),
-            ];
-        });
     }
 
     public function title(string|Closure $title): static

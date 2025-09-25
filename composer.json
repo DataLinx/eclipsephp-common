@@ -48,22 +48,12 @@
         "spatie/laravel-package-tools": "^1.19"
     },
     "require-dev": {
-        "eclipsephp/catalogue-plugin": "dev-f4@dev",
+        "eclipsephp/catalogue-plugin": "dev-main",
         "laravel/pint": "^1.21",
         "orchestra/testbench": "^10.1",
         "pestphp/pest": "^3.7",
         "pestphp/pest-plugin-livewire": "^3.0"
     },
-    "repositories": [
-        {
-          "type": "vcs",
-          "url": "https://github.com/KilianTrunk/eclipsephp-catalogue-plugin.git"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/KilianTrunk/eclipsephp-world-plugin.git"
-          }
-      ],
     "scripts": {
         "post-autoload-dump": [
             "@clear",
@@ -93,6 +83,5 @@
                 "Eclipse\\Common\\CommonServiceProvider"
             ]
         }
-    },
-    "version": "dev-f4"
+    }
 }

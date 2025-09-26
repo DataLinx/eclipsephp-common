@@ -62,7 +62,6 @@ MediaGallery::make('images')
 
 ### Interactive Features
 - `preview()` - Enable lightbox modal for image preview (disabled by default)
-- `lightbox(bool)` - Explicitly enable/disable lightbox functionality
 - `orderable()` - Enable drag & drop reordering (disabled by default)
 
 ### Upload Configuration

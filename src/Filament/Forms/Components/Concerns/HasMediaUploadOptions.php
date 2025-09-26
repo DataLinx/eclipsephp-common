@@ -18,6 +18,8 @@ trait HasMediaUploadOptions
 
     protected bool|Closure $isMultiple = true;
 
+    protected bool|Closure $allowBulkDelete = true;
+
     public function acceptedFileTypes(array|Closure $types): static
     {
         $this->acceptedFileTypes = $types;
@@ -103,5 +105,24 @@ trait HasMediaUploadOptions
     public function isMultiple(): bool
     {
         return $this->evaluate($this->isMultiple);
+    }
+
+    public function bulkDelete(bool|Closure $condition = true): static
+    {
+        $this->allowBulkDelete = $condition;
+
+        return $this;
+    }
+
+    public function disableBulkDelete(): static
+    {
+        $this->allowBulkDelete = false;
+
+        return $this;
+    }
+
+    public function getAllowBulkDelete(): bool
+    {
+        return $this->evaluate($this->allowBulkDelete);
     }
 }

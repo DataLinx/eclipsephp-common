@@ -74,6 +74,7 @@
     }" wire:key="media-gallery-{{ str_replace('.', '-', $statePath) }}"
         class="eclipse-media-gallery" style="display: flex; flex-direction: column; gap: 1rem;">
         <div x-show="state && state.length > 0" class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            @if ($getAllowBulkDelete())
             <div class="flex items-center gap-3">
                 <label class="flex items-center gap-2 cursor-pointer">
                     <x-filament::input.checkbox :checked="false" x-bind:checked="allSelected"
@@ -91,6 +92,9 @@
                     </x-filament::button>
                 </div>
             </div>
+            @else
+            <div></div>
+            @endif
 
             <div class="flex items-center gap-2 flex-shrink-0">
                 @if ($getAllowFileUploads() && $getAction('upload'))
@@ -189,9 +193,11 @@
                                     </x-filament::button>
                                 </div>
 
+                                @if ($getAllowBulkDelete())
                                 <x-filament::input.checkbox :checked="false"
                                     x-bind:checked="selectedImages.includes(image.uuid)"
                                     x-on:change="toggleImageSelection(image.uuid)" class="flex-shrink-0" />
+                                @endif
                             </div>
                         </div>
                     </div>

@@ -168,7 +168,7 @@ class MediaGallery extends Field
                 ->usingFileName($this->sanitizeFilename($item['file_name'] ?? basename($item['temp_url'])))
                 ->withCustomProperties($this->getMediaCustomProperties($item, $index))
                 ->toMediaCollection($this->getCollection());
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
         }
     }
 
@@ -203,7 +203,7 @@ class MediaGallery extends Field
                     $locales[$locale] = $plugin->getLocaleLabel($locale) ?? $locale;
                 }
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
         }
 
         if (empty($locales)) {
@@ -264,15 +264,104 @@ class MediaGallery extends Field
                     return;
                 }
 
-                $record = $this->getRecord();
-                $maxFiles = $this->getMaxFiles();
+                $originalMemoryLimit = ini_get('memory_limit');
+                ini_set('memory_limit', '192M');
 
-                if (! $record) {
-                    $currentState = $this->getState() ?: [];
-                    $existingCount = count($currentState);
-                    $maxPosition = count($currentState) - 1;
+                try {
+                    $record = $this->getRecord();
+                    $maxFiles = $this->getMaxFiles();
+
+                    if (! $record) {
+                        $currentState = $this->getState() ?: [];
+                        $existingCount = count($currentState);
+                        $maxPosition = count($currentState) - 1;
+                        $allowedCount = $maxFiles ? max(0, $maxFiles - $existingCount) : count($data['files']);
+                        $filesToProcess = array_slice($data['files'], 0, $allowedCount);
+
+                        if ($allowedCount <= 0) {
+                            Notification::make()
+                                ->title('Maximum files limit reached')
+                                ->body("You can only upload {$maxFiles} file(s) total.")
+                                ->warning()
+                                ->send();
+
+                            return;
+                        }
+
+                        $initialStateCount = count($currentState);
+                        $addedInThisBatch = 0;
+
+                        foreach ($filesToProcess as $filePath) {
+                            if (is_string($filePath)) {
+                                $fullPath = storage_path('app/public/'.$filePath);
+
+                                if (file_exists($fullPath)) {
+                                    $tempId = 'temp_'.uniqid();
+                                    $fileName = $this->sanitizeFilename(basename($filePath));
+
+                                    $extension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+                                    $mimeType = match ($extension) {
+                                        'jpg', 'jpeg' => 'image/jpeg',
+                                        'png' => 'image/png',
+                                        'gif' => 'image/gif',
+                                        'webp' => 'image/webp',
+                                        default => 'image/jpeg'
+                                    };
+
+                                    $currentState[] = [
+                                        'id' => null,
+                                        'temp_id' => $tempId,
+                                        'temp_file' => $filePath,
+                                        'uuid' => (string) Str::uuid(),
+                                        'url' => \Storage::url($filePath),
+                                        'thumb_url' => \Storage::url($filePath),
+                                        'preview_url' => \Storage::url($filePath),
+                                        'name' => [],
+                                        'description' => [],
+                                        'is_cover' => $initialStateCount === 0 && $addedInThisBatch === 0,
+                                        'position' => ++$maxPosition,
+                                        'file_name' => $fileName,
+                                        'mime_type' => $mimeType,
+                                        'size' => 0,
+                                    ];
+
+                                    $addedInThisBatch++;
+                                }
+                            }
+                        }
+
+                        $this->state($currentState);
+
+                        if (function_exists('gc_collect_cycles')) {
+                            gc_collect_cycles();
+                        }
+
+                        $uploadedCount = count($filesToProcess);
+                        $rejectedCount = count($data['files']) - $uploadedCount;
+
+                        if ($uploadedCount > 0) {
+                            Notification::make()
+                                ->title($uploadedCount.' image(s) added successfully')
+                                ->success()
+                                ->send();
+                        }
+
+                        if ($rejectedCount > 0) {
+                            Notification::make()
+                                ->title($rejectedCount.' image(s) rejected')
+                                ->body("Maximum files limit ({$maxFiles}) reached.")
+                                ->warning()
+                                ->send();
+                        }
+
+                        return;
+                    }
+
+                    $existingCount = $record->getMedia($this->getCollection())->count();
+                    $maxPosition = $record->getMedia($this->getCollection())->max(fn ($m) => $m->getCustomProperty('position', 0)) ?? -1;
                     $allowedCount = $maxFiles ? max(0, $maxFiles - $existingCount) : count($data['files']);
                     $filesToProcess = array_slice($data['files'], 0, $allowedCount);
+                    $uploadCount = 0;
 
                     if ($allowedCount <= 0) {
                         Notification::make()
@@ -289,37 +378,30 @@ class MediaGallery extends Field
                             $fullPath = storage_path('app/public/'.$filePath);
 
                             if (file_exists($fullPath)) {
-                                $tempId = 'temp_'.uniqid();
-                                $fileName = $this->sanitizeFilename(basename($filePath));
+                                $record->addMedia($fullPath)
+                                    ->usingFileName($this->sanitizeFilename(basename($filePath)))
+                                    ->withCustomProperties([
+                                        'name' => [],
+                                        'description' => [],
+                                        'is_cover' => $existingCount === 0 && $uploadCount === 0,
+                                        'position' => ++$maxPosition,
+                                    ])
+                                    ->toMediaCollection($this->getCollection());
 
-                                $currentState[] = [
-                                    'id' => null,
-                                    'temp_id' => $tempId,
-                                    'temp_file' => $filePath,
-                                    'uuid' => (string) \Str::uuid(),
-                                    'url' => \Storage::url($filePath),
-                                    'thumb_url' => \Storage::url($filePath),
-                                    'preview_url' => \Storage::url($filePath),
-                                    'name' => [],
-                                    'description' => [],
-                                    'is_cover' => count($currentState) === 0,
-                                    'position' => ++$maxPosition,
-                                    'file_name' => $fileName,
-                                    'mime_type' => mime_content_type($fullPath),
-                                    'size' => filesize($fullPath),
-                                ];
+                                $uploadCount++;
+
+                                @unlink($fullPath);
                             }
                         }
                     }
 
-                    $this->state($currentState);
+                    $this->refreshState();
 
-                    $uploadedCount = count($filesToProcess);
-                    $rejectedCount = count($data['files']) - $uploadedCount;
+                    $rejectedCount = count($data['files']) - $uploadCount;
 
-                    if ($uploadedCount > 0) {
+                    if ($uploadCount > 0) {
                         Notification::make()
-                            ->title($uploadedCount.' image(s) added successfully')
+                            ->title($uploadCount.' image(s) uploaded successfully')
                             ->success()
                             ->send();
                     }
@@ -331,65 +413,14 @@ class MediaGallery extends Field
                             ->warning()
                             ->send();
                     }
-
-                    return;
-                }
-
-                $existingCount = $record->getMedia($this->getCollection())->count();
-                $maxPosition = $record->getMedia($this->getCollection())->max(fn ($m) => $m->getCustomProperty('position', 0)) ?? -1;
-                $allowedCount = $maxFiles ? max(0, $maxFiles - $existingCount) : count($data['files']);
-                $filesToProcess = array_slice($data['files'], 0, $allowedCount);
-                $uploadCount = 0;
-
-                if ($allowedCount <= 0) {
+                } catch (Exception $e) {
                     Notification::make()
-                        ->title('Maximum files limit reached')
-                        ->body("You can only upload {$maxFiles} file(s) total.")
-                        ->warning()
+                        ->title('Upload failed')
+                        ->body('An error occurred during image processing. Please try uploading fewer images at once.')
+                        ->danger()
                         ->send();
-
-                    return;
-                }
-
-                foreach ($filesToProcess as $filePath) {
-                    if (is_string($filePath)) {
-                        $fullPath = storage_path('app/public/'.$filePath);
-
-                        if (file_exists($fullPath)) {
-                            $record->addMedia($fullPath)
-                                ->usingFileName($this->sanitizeFilename(basename($filePath)))
-                                ->withCustomProperties([
-                                    'name' => [],
-                                    'description' => [],
-                                    'is_cover' => $existingCount === 0 && $uploadCount === 0,
-                                    'position' => ++$maxPosition,
-                                ])
-                                ->toMediaCollection($this->getCollection());
-
-                            $uploadCount++;
-
-                            @unlink($fullPath);
-                        }
-                    }
-                }
-
-                $this->refreshState();
-
-                $rejectedCount = count($data['files']) - $uploadCount;
-
-                if ($uploadCount > 0) {
-                    Notification::make()
-                        ->title($uploadCount.' image(s) uploaded successfully')
-                        ->success()
-                        ->send();
-                }
-
-                if ($rejectedCount > 0) {
-                    Notification::make()
-                        ->title($rejectedCount.' image(s) rejected')
-                        ->body("Maximum files limit ({$maxFiles}) reached.")
-                        ->warning()
-                        ->send();
+                } finally {
+                    ini_set('memory_limit', $originalMemoryLimit);
                 }
             })
             ->modalWidth('lg')
@@ -476,7 +507,7 @@ class MediaGallery extends Field
                                 'id' => null,
                                 'temp_id' => $tempId,
                                 'temp_url' => $url,
-                                'uuid' => (string) \Str::uuid(),
+                                'uuid' => (string) Str::uuid(),
                                 'url' => $url,
                                 'thumb_url' => $url,
                                 'preview_url' => $url,

@@ -6,7 +6,7 @@ use Closure;
 
 trait CanManageMediaCollections
 {
-    protected string|Closure $collection = 'default';
+    protected string|Closure $collection = 'images';
 
     public function collection(string|Closure $collection): static
     {

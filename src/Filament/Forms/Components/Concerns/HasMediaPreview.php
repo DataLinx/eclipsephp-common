@@ -6,33 +6,40 @@ use Closure;
 
 trait HasMediaPreview
 {
-    protected array|Closure $previewConversions = ['thumb', 'preview'];
+    protected bool|Closure $hasLightbox = false;
 
-    protected int|Closure $previewHeight = 200;
+    protected bool|Closure $hasCoverImageSelection = true;
 
-    protected int|Closure $previewWidth = 200;
+    protected bool|Closure $isDragReorderable = false;
 
     protected int|Closure $thumbnailHeight = 150;
 
-    protected bool|Closure $preview = true;
+    protected array|string|int|null $mediaColumns = 4;
 
-    public function previewConversions(array|Closure $conversions): static
+    public function lightbox(bool|Closure $condition = true): static
     {
-        $this->previewConversions = $conversions;
+        $this->hasLightbox = $condition;
 
         return $this;
     }
 
-    public function previewHeight(int|Closure $height): static
+    public function preview(): static
     {
-        $this->previewHeight = $height;
+        $this->hasLightbox = true;
 
         return $this;
     }
 
-    public function previewWidth(int|Closure $width): static
+    public function coverImageSelection(bool|Closure $condition = true): static
     {
-        $this->previewWidth = $width;
+        $this->hasCoverImageSelection = $condition;
+
+        return $this;
+    }
+
+    public function orderable(bool|Closure $condition = true): static
+    {
+        $this->isDragReorderable = $condition;
 
         return $this;
     }
@@ -44,26 +51,33 @@ trait HasMediaPreview
         return $this;
     }
 
-    public function preview(bool|Closure $preview = true): static
+    public function columns(array|string|int|null $columns = 2): static
     {
-        $this->preview = $preview;
+        $this->mediaColumns = $columns;
 
         return $this;
     }
 
-    public function getPreviewConversions(): array
+    public function gridColumns(int $columns): static
     {
-        return $this->evaluate($this->previewConversions);
+        $this->mediaColumns = $columns;
+
+        return $this;
     }
 
-    public function getPreviewHeight(): int
+    public function hasLightbox(): bool
     {
-        return $this->evaluate($this->previewHeight);
+        return $this->evaluate($this->hasLightbox);
     }
 
-    public function getPreviewWidth(): int
+    public function hasCoverImageSelection(): bool
     {
-        return $this->evaluate($this->previewWidth);
+        return $this->evaluate($this->hasCoverImageSelection);
+    }
+
+    public function isDragReorderable(): bool
+    {
+        return $this->evaluate($this->isDragReorderable);
     }
 
     public function getThumbnailHeight(): int
@@ -71,8 +85,62 @@ trait HasMediaPreview
         return $this->evaluate($this->thumbnailHeight);
     }
 
-    public function getPreview(): bool
+    public function getColumns(?string $breakpoint = null): array|string|int|null
     {
-        return $this->evaluate($this->preview);
+        $columns = $this->evaluate($this->mediaColumns);
+
+        if ($breakpoint && is_array($columns)) {
+            return $columns[$breakpoint] ?? null;
+        }
+
+        return $columns;
+    }
+
+    public function getGridStyle(): string
+    {
+        $columns = $this->getColumns();
+
+        if (is_array($columns)) {
+            $default = $columns['default'] ?? 4;
+            $css = "grid-template-columns: repeat({$default}, 1fr);";
+
+            $breakpoints = [
+                'sm' => '640px',
+                'md' => '768px',
+                'lg' => '1024px',
+                'xl' => '1280px',
+                '2xl' => '1536px',
+            ];
+
+            foreach ($columns as $breakpoint => $count) {
+                if ($breakpoint === 'default' || ! isset($breakpoints[$breakpoint])) {
+                    continue;
+                }
+
+                $css .= " @media (min-width: {$breakpoints[$breakpoint]}) { grid-template-columns: repeat({$count}, 1fr); }";
+            }
+
+            return $css;
+        }
+
+        $columnCount = $columns ?? 4;
+
+        return "grid-template-columns: repeat({$columnCount}, 1fr);";
+    }
+
+    public function getGridClasses(): string
+    {
+        return 'grid gap-3';
+    }
+
+    public function getGridColumns(): int
+    {
+        $columns = $this->getColumns();
+
+        if (is_array($columns)) {
+            return $columns['default'] ?? 4;
+        }
+
+        return (int) ($columns ?? 4);
     }
 }

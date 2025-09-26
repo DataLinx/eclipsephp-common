@@ -20,10 +20,6 @@ trait HasMediaUploadOptions
 
     protected bool|Closure $allowBulkDelete = true;
 
-    protected array|Closure $columns = ['default' => 1];
-
-    protected bool|Closure $orderable = false;
-
     public function acceptedFileTypes(array|Closure $types): static
     {
         $this->acceptedFileTypes = $types;
@@ -81,20 +77,6 @@ trait HasMediaUploadOptions
         return $this;
     }
 
-    public function columns(array|Closure $columns): static
-    {
-        $this->columns = $columns;
-
-        return $this;
-    }
-
-    public function orderable(bool|Closure $condition = true): static
-    {
-        $this->orderable = $condition;
-
-        return $this;
-    }
-
     public function getAcceptedFileTypes(): array
     {
         return $this->evaluate($this->acceptedFileTypes);
@@ -142,15 +124,5 @@ trait HasMediaUploadOptions
     public function getAllowBulkDelete(): bool
     {
         return $this->evaluate($this->allowBulkDelete);
-    }
-
-    public function getColumns(): array
-    {
-        return $this->evaluate($this->columns);
-    }
-
-    public function getOrderable(): bool
-    {
-        return $this->evaluate($this->orderable);
     }
 }

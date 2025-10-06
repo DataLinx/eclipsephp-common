@@ -3,6 +3,10 @@
 namespace Eclipse\Common;
 
 use Eclipse\Common\Foundation\Providers\PackageServiceProvider;
+use Filament\Support\Assets\Css;
+use Filament\Support\Assets\Js;
+use Filament\Support\Facades\FilamentAsset;
+use Filament\Support\Facades\FilamentView;
 use Spatie\LaravelPackageTools\Package as SpatiePackage;
 
 class CommonServiceProvider extends PackageServiceProvider
@@ -12,7 +16,9 @@ class CommonServiceProvider extends PackageServiceProvider
     public function configurePackage(SpatiePackage|Package $package): void
     {
         $package->name(static::$name)
-            ->hasTranslations();
+            ->hasViews()
+            ->hasTranslations()
+            ->hasAssets();
     }
 
     public function register(): self
@@ -26,5 +32,18 @@ class CommonServiceProvider extends PackageServiceProvider
         $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'eclipse-common');
 
         return $this;
+    }
+
+    public function bootingPackage(): void
+    {
+        FilamentAsset::register([
+            Css::make('slider-column', asset('vendor/eclipse-common/slider-column.css')),
+            Js::make('slider-column', asset('vendor/eclipse-common/slider-column.js')),
+        ], 'eclipse-common');
+
+        FilamentView::registerRenderHook(
+            'panels::body.end',
+            fn (): string => view('eclipse-common::components.slider-column-lightbox')->render()
+        );
     }
 }

@@ -48,7 +48,6 @@
         "spatie/laravel-package-tools": "^1.19"
     },
     "require-dev": {
-        "eclipsephp/catalogue-plugin": "dev-main",
         "laravel/pint": "^1.21",
         "orchestra/testbench": "^10.1",
         "pestphp/pest": "^3.7",

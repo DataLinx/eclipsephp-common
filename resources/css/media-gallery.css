@@ -1,0 +1,153 @@
+[x-cloak] {
+    display: none !important;
+}
+
+.eclipse-media-gallery [draggable="true"] {
+    cursor: move;
+}
+
+.eclipse-media-gallery [draggable="true"]:active {
+    cursor: grabbing;
+}
+
+.eclipse-image-lightbox-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9999!important;
+    background-color: rgba(0, 0, 0, 0.95);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.eclipse-image-lightbox-container {
+    position: relative;
+    max-width: 90vw;
+    max-height: 90vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999999999 !important;
+}
+
+.eclipse-image-lightbox-close {
+    position: absolute;
+    top: -50px;
+    right: 0;
+    color: white;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    opacity: 0.8;
+    transition: opacity 0.2s;
+}
+
+.eclipse-image-lightbox-close:hover {
+    opacity: 1;
+}
+
+.eclipse-image-lightbox-close svg {
+    width: 32px;
+    height: 32px;
+}
+
+.eclipse-image-lightbox-image-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #1f2937;
+    border-radius: 8px;
+    overflow: hidden;
+    max-width: 90vw;
+    max-height: 85vh;
+}
+
+.eclipse-image-lightbox-image {
+    max-width: 100%;
+    max-height: 85vh;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    display: block;
+}
+
+.eclipse-image-lightbox-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.eclipse-image-lightbox-nav:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.eclipse-image-lightbox-nav.prev {
+    left: -60px;
+}
+
+.eclipse-image-lightbox-nav.next {
+    right: -60px;
+}
+
+.eclipse-image-lightbox-nav svg {
+    width: 24px;
+    height: 24px;
+}
+
+.eclipse-image-lightbox-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+    padding: 24px;
+    color: white;
+    border-radius: 0 0 8px 8px;
+}
+
+.eclipse-image-lightbox-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0 0 8px 0;
+}
+
+.eclipse-image-lightbox-description {
+    font-size: 14px;
+    opacity: 0.9;
+    margin: 0;
+    line-height: 1.5;
+}
+
+.eclipse-image-card-container {
+    background-color: #f3f4f6;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.eclipse-image-card-img {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+}

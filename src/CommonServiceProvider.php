@@ -16,8 +16,8 @@ class CommonServiceProvider extends PackageServiceProvider
     public function configurePackage(SpatiePackage|Package $package): void
     {
         $package->name(static::$name)
-            ->hasViews()
             ->hasTranslations()
+            ->hasViews()
             ->hasAssets();
     }
 
@@ -36,6 +36,11 @@ class CommonServiceProvider extends PackageServiceProvider
 
     public function bootingPackage(): void
     {
+        FilamentAsset::register([
+            Css::make('media-gallery', __DIR__.'/../resources/css/media-gallery.css'),
+            Js::make('media-gallery', __DIR__.'/../resources/js/media-gallery.js'),
+        ], package: static::$name);
+
         FilamentAsset::register([
             Css::make('slider-column', asset('vendor/eclipse-common/slider-column.css')),
             Js::make('slider-column', asset('vendor/eclipse-common/slider-column.js')),

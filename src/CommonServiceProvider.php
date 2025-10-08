@@ -41,9 +41,14 @@ class CommonServiceProvider extends PackageServiceProvider
             Js::make('media-gallery', __DIR__.'/../resources/js/media-gallery.js'),
         ], package: static::$name);
 
+        FilamentAsset::register([
+            Css::make('slider-column', asset('vendor/eclipse-common/slider-column.css')),
+            Js::make('slider-column', asset('vendor/eclipse-common/slider-column.js')),
+        ], 'eclipse-common');
+
         FilamentView::registerRenderHook(
             'panels::body.end',
-            fn (): string => view('eclipse-common::components.media-lightbox')->render()
+            fn (): string => view('eclipse-common::components.slider-column-lightbox')->render()
         );
     }
 }

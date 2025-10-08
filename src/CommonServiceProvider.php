@@ -37,9 +37,9 @@ class CommonServiceProvider extends PackageServiceProvider
     public function bootingPackage(): void
     {
         FilamentAsset::register([
-            Css::make('slider-column', asset('vendor/eclipse-common/slider-column.css')),
-            Js::make('slider-column', asset('vendor/eclipse-common/slider-column.js')),
-        ], 'eclipse-common');
+            Css::make('slider-column', __DIR__.'/../resources/css/slider-column.css'),
+            Js::make('slider-column', __DIR__.'/../resources/js/slider-column.js'),
+        ], package: static::$name);
 
         FilamentView::registerRenderHook(
             'panels::body.end',

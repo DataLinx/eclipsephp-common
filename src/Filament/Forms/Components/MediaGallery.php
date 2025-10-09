@@ -7,7 +7,7 @@ use Eclipse\Common\Filament\Forms\Components\Concerns\CanManageMediaCollections;
 use Eclipse\Common\Filament\Forms\Components\Concerns\HasMediaPreview;
 use Eclipse\Common\Filament\Forms\Components\Concerns\HasMediaUploadOptions;
 use Exception;
-use Filament\Forms\Components\Actions\Action;
+use Filament\Actions\Action;
 use Filament\Forms\Components\Concerns\HasLoadingMessage;
 use Filament\Forms\Components\Concerns\HasNestedRecursiveValidationRules;
 use Filament\Forms\Components\Concerns\HasPlaceholder;

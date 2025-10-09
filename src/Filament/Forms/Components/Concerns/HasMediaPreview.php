@@ -58,13 +58,6 @@ trait HasMediaPreview
         return $this;
     }
 
-    public function mediaGridColumns(int $columns): static
-    {
-        $this->mediaColumns = $columns;
-
-        return $this;
-    }
-
     public function hasLightbox(): bool
     {
         return $this->evaluate($this->hasLightbox);
@@ -131,16 +124,5 @@ trait HasMediaPreview
     public function getGridClasses(): string
     {
         return 'grid gap-3';
-    }
-
-    public function getMediaGridColumns(): int
-    {
-        $columns = $this->getMediaColumns();
-
-        if (is_array($columns)) {
-            return $columns['default'] ?? 4;
-        }
-
-        return (int) ($columns ?? 4);
     }
 }

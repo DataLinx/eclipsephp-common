@@ -36,7 +36,7 @@ MediaGallery::make('images')
 
 ```php
 MediaGallery::make('images')
-    ->columns(6) // Number of columns (default: 4)
+    ->mediaColumns(6) // Number of columns (default: 4)
     ->thumbnailHeight(200) // Thumbnail height in pixels (default: 150)
     ->preview() // Enable lightbox preview (disabled by default)
     ->orderable() // Enable drag & drop reordering (disabled by default)
@@ -46,7 +46,7 @@ MediaGallery::make('images')
 
 ```php
 MediaGallery::make('images')
-    ->columns([
+    ->mediaColumns([
         'default' => 2,
         'sm' => 3,
         'lg' => 4,
@@ -57,7 +57,7 @@ MediaGallery::make('images')
 ## Methods Available
 
 ### Layout Control
-- `columns(int|array)` - Set number of grid columns or responsive column configuration (default: 4)
+- `mediaColumns(int|array)` - Set number of grid columns or responsive column configuration (default: 4)
 - `thumbnailHeight(int)` - Set thumbnail image height in pixels (default: 150)
 
 ### Interactive Features
@@ -108,7 +108,7 @@ MediaGallery::make('images')
     ->collection('gallery')
     ->allowUploads()
     ->preview() // Enables lightbox
-    ->columns(3)
+    ->mediaColumns(3)
     ->thumbnailHeight(180)
 ```
 
@@ -118,7 +118,7 @@ MediaGallery::make('images')
     ->collection('portfolio')
     ->allowUploads()
     ->orderable() // Enables drag & drop
-    ->columns(5)
+    ->mediaColumns(5)
     ->maxFiles(50)
 ```
 
@@ -135,7 +135,7 @@ MediaGallery::make('images')
 MediaGallery::make('images')
     ->collection('external-media')
     ->allowUrlUploads() // Only URL uploads
-    ->columns(6)
+    ->mediaColumns(6)
 ```
 
 ### Complete Configuration
@@ -144,7 +144,7 @@ MediaGallery::make('images')
     ->collection('products')
     ->allowUploads() // Enable both upload methods
     ->maxFiles(20)
-    ->columns(4)
+    ->mediaColumns(4)
     ->thumbnailHeight(180)
     ->preview() // Enable lightbox
     ->orderable() // Enable reordering
@@ -156,7 +156,7 @@ MediaGallery::make('images')
 MediaGallery::make('images')
     ->collection(fn () => $this->record?->category . '-images')
     ->maxFiles(fn () => $this->record?->isPremium() ? 50 : 10)
-    ->columns(fn () => $this->getColumnCount())
+    ->mediaColumns(fn () => $this->getColumnCount())
 ```
 
 ## Default Behaviors

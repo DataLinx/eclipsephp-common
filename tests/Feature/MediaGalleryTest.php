@@ -151,7 +151,7 @@ test('media gallery supports responsive columns', function () {
         'lg' => 4,
         'xl' => 6,
     ])
-        ->and($field->getGridClasses())->toBe('grid gap-3')
+        ->and($field->getGridClasses())->toBe('eclipse-media-gallery-grid')
         ->and($field->getGridStyle())->toContain('grid-template-columns: repeat(2, 1fr)')
         ->and($field->getGridStyle())->toContain('@media (min-width: 640px)')
         ->and($field->getGridStyle())->toContain('@media (min-width: 1024px)');
@@ -161,7 +161,7 @@ test('media gallery columns method works with simple integer', function () {
     $field = MediaGallery::make('images')->mediaColumns(5);
 
     expect($field->getMediaColumns())->toBe(5)
-        ->and($field->getGridClasses())->toBe('grid gap-3')
+        ->and($field->getGridClasses())->toBe('eclipse-media-gallery-grid')
         ->and($field->getGridStyle())->toBe('grid-template-columns: repeat(5, 1fr);');
 });
 

@@ -123,6 +123,6 @@ trait HasMediaPreview
 
     public function getGridClasses(): string
     {
-        return 'grid gap-3';
+        return 'eclipse-media-gallery-grid';
     }
 }

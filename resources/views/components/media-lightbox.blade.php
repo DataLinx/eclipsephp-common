@@ -12,7 +12,7 @@
 
     <div class="eclipse-image-lightbox-container" @click.stop>
         <button type="button" @click.stop="lightboxOpen = false" class="eclipse-image-lightbox-close">
-            <x-filament::icon icon="heroicon-m-x-mark" class="h-6 w-6" />
+            <x-filament::icon icon="heroicon-m-x-mark" class="eclipse-icon-md" />
         </button>
 
         <div class="eclipse-image-lightbox-image-wrapper">
@@ -27,11 +27,11 @@
         <template x-if="state && state.length > 1">
             <div>
                 <button type="button" @click.stop.prevent="previousImage()" class="eclipse-image-lightbox-nav prev">
-                    <x-filament::icon icon="heroicon-m-chevron-left" class="h-6 w-6" />
+                    <x-filament::icon icon="heroicon-m-chevron-left" class="eclipse-icon-md" />
                 </button>
 
                 <button type="button" @click.stop.prevent="nextImage()" class="eclipse-image-lightbox-nav next">
-                    <x-filament::icon icon="heroicon-m-chevron-right" class="h-6 w-6" />
+                    <x-filament::icon icon="heroicon-m-chevron-right" class="eclipse-icon-md" />
                 </button>
             </div>
         </template>

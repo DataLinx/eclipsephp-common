@@ -5,8 +5,11 @@
     $gridStyle = $getGridStyle();
     $thumbnailHeight = $getThumbnailHeight();
     $statePath = $getStatePath();
+    $componentKey = $getKey();
     $gridId = 'media-gallery-grid-' . str_replace(['.', '[', ']'], '-', $statePath);
 @endphp
+
+@assets(['eclipse-common::media-gallery-styles', 'eclipse-common::media-gallery-scripts'])
 
 <x-dynamic-component :component="$getFieldWrapperView()" :field="$field">
     <div x-data="{
@@ -14,23 +17,23 @@
             state: $wire.{{ $applyStateBindingModifiers("entangle('{$statePath}')") }},
             getLocale: () => $wire.activeLocale || 'en',
         }),
-    
+
         selectedImages: [],
-    
+
         bulkActionsOpen: false,
-    
+
         draggedIndex: null,
-    
+
         get hasSelection() { return this.selectedImages.length > 0; },
-    
+
         get selectedCount() { return this.selectedImages.length; },
-    
+
         get totalCount() { return this.state ? this.state.length : 0; },
-    
+
         get allSelected() { return this.totalCount > 0 && this.selectedImages.length === this.totalCount; },
-    
+
         get someSelected() { return this.selectedImages.length > 0 && this.selectedImages.length < this.totalCount; },
-    
+
         toggleSelectAll() {
             if (this.allSelected) {
                 this.selectedImages = [];
@@ -39,7 +42,7 @@
             }
             this.updateBulkActionsVisibility();
         },
-    
+
         toggleImageSelection(uuid) {
             const index = this.selectedImages.indexOf(uuid);
             if (index > -1) {
@@ -49,44 +52,42 @@
             }
             this.updateBulkActionsVisibility();
         },
-    
+
         updateBulkActionsVisibility() {
             this.bulkActionsOpen = this.hasSelection;
         },
-    
+
         clearSelection() {
             this.selectedImages = [];
             this.bulkActionsOpen = false;
         },
-    
+
         async bulkDelete() {
             if (this.selectedImages.length === 0) return;
-    
+
             try {
-                await $wire.mountFormComponentAction('{{ $statePath }}', 'bulkDelete', {
-                    arguments: { uuids: this.selectedImages }
-                });
+                await $wire.mountAction('bulkDelete', { uuids: this.selectedImages }, { schemaComponent: '{{ $componentKey }}' });
                 this.clearSelection();
             } catch (error) {
                 // Don't clear selection on error so user can retry
             }
         }
     }" wire:key="media-gallery-{{ str_replace('.', '-', $statePath) }}"
-        class="eclipse-media-gallery" style="display: flex; flex-direction: column; gap: 1rem;">
-        <div x-show="state && state.length > 0" class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        class="eclipse-media-gallery">
+        <div x-show="state && state.length > 0" class="eclipse-media-gallery-header">
             @if ($getAllowBulkDelete())
-            <div class="flex items-center gap-3">
-                <label class="flex items-center gap-2 cursor-pointer">
+            <div class="eclipse-media-gallery-bulk-controls">
+                <label class="eclipse-media-gallery-select-label">
                     <x-filament::input.checkbox :checked="false" x-bind:checked="allSelected"
-                        x-on:change="toggleSelectAll()" class="flex-shrink-0" />
-                    <span class="text-sm font-medium text-gray-700 dark:text-gray-300 select-none">
+                        x-on:change="toggleSelectAll()" />
+                    <span class="eclipse-media-gallery-select-text">
                         <span x-show="!hasSelection">Select All</span>
                         <span x-show="allSelected">Deselect All</span>
                         <span x-show="someSelected && !allSelected" x-text="`${selectedCount} selected`"></span>
                     </span>
                 </label>
 
-                <div x-show="hasSelection" x-transition class="flex items-center gap-2 ml-2">
+                <div x-show="hasSelection" x-transition class="eclipse-media-gallery-bulk-actions">
                     <x-filament::button size="xs" color="danger" icon="heroicon-o-trash" x-on:click="bulkDelete()">
                         Delete
                     </x-filament::button>
@@ -96,16 +97,16 @@
             <div></div>
             @endif
 
-            <div class="flex items-center gap-2 flex-shrink-0">
+            <div class="eclipse-media-gallery-action-buttons">
                 @if ($getAllowFileUploads() && $getAction('upload'))
                     <x-filament::button size="xs" color="primary" icon="heroicon-o-arrow-up-tray"
-                        x-on:click="$wire.mountFormComponentAction('{{ $statePath }}', 'upload')">
+                        x-on:click="$wire.mountAction('upload', {}, { schemaComponent: '{{ $componentKey }}' })">
                         Upload Files
                     </x-filament::button>
                 @endif
                 @if ($getAllowUrlUploads() && $getAction('urlUpload'))
                     <x-filament::button size="xs" color="gray" icon="heroicon-o-link"
-                        x-on:click="$wire.mountFormComponentAction('{{ $statePath }}', 'urlUpload')">
+                        x-on:click="$wire.mountAction('urlUpload', {}, { schemaComponent: '{{ $componentKey }}' })">
                         Add from URL
                     </x-filament::button>
                 @endif
@@ -113,7 +114,7 @@
         </div>
 
         <div x-cloak wire:ignore>
-            <div x-show="state && state.length > 0" style="display: flex; flex-direction: column; gap: 1rem;">
+            <div x-show="state && state.length > 0" class="eclipse-media-gallery-grid-wrapper">
 
                 @if (str_contains($gridStyle, '@media'))
                     <style>
@@ -127,17 +128,14 @@
                 @endif
                 <template x-for="(image, index) in state" :key="image.uuid">
                     <div @class([
-                        'fi-section relative group overflow-hidden transition-all duration-300',
-                        'rounded-xl bg-white shadow-sm ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10',
-                        'cursor-move' => $isDraggable,
-                        'hover:shadow-md' => !$isDraggable,
+                        'eclipse-media-gallery-card',
+                        'draggable' => $isDraggable,
+                        'hoverable' => !$isDraggable,
                     ])
                         :class="{
-                            'ring-2 ring-primary-600 dark:ring-primary-400 shadow-lg bg-primary-50 dark:bg-primary-900/20': selectedImages
-                                .includes(image.uuid),
-                            'opacity-50': draggedIndex === index,
-                            'ring-2 ring-primary-400 bg-primary-50 dark:bg-primary-900/20': draggedIndex !== null &&
-                                draggedIndex !== index
+                            'selected': selectedImages.includes(image.uuid),
+                            'dragged': draggedIndex === index,
+                            'drag-over': draggedIndex !== null && draggedIndex !== index
                         }"
                         @if ($isDraggable) draggable="true"
                         @dragstart="draggedIndex = index"
@@ -146,24 +144,27 @@
                             if (draggedIndex !== index) {
                                 const item = state.splice(draggedIndex, 1)[0];
                                 state.splice(index, 0, item);
-                                $wire.mountFormComponentAction('{{ $statePath }}', 'reorder', { items: state.map(img => img.uuid) });
+                                $wire.mountAction('reorder', { items: state.map(img => img.uuid) }, { schemaComponent: '{{ $componentKey }}' });
                             }
                             draggedIndex = null;
                         "
                         @dragend="draggedIndex = null" @endif>
 
                         <div class="eclipse-image-card-container"
-                            style="position: relative; height: {{ $thumbnailHeight }}px;">
+                            style="height: {{ $thumbnailHeight }}px;">
                             <img :src="image.thumb_url || image.url" :alt="image.file_name"
-                                class="eclipse-image-card-img select-none pointer-events-none" draggable="false"
-                                @if ($hasLightboxPreview) @click="openImageModal(index)"
-                                    style="cursor: pointer; pointer-events: auto;" @endif />
+                                @class([
+                                    'eclipse-image-card-img',
+                                    'clickable' => $hasLightboxPreview,
+                                ])
+                                draggable="false"
+                                @if ($hasLightboxPreview) @click="openImageModal(index)" @endif />
 
 
-                            <div class="absolute z-20" style="top: 8px; left: 8px;">
+                            <div class="eclipse-image-card-cover-badge">
                                 <template x-if="!image.is_cover">
                                     <x-filament::button size="xs" color="primary"
-                                        x-on:click.stop="$wire.mountFormComponentAction('{{ $statePath }}', 'setCover', { arguments: { uuid: image.uuid } })"
+                                        x-on:click.stop="$wire.mountAction('setCover', { uuid: image.uuid }, { schemaComponent: '{{ $componentKey }}' })"
                                         class="shadow-sm">
                                         Set as Cover
                                     </x-filament::button>
@@ -175,20 +176,20 @@
                                 </template>
                             </div>
                         </div>
-                        <div class="p-3">
-                            <p class="text-sm font-medium text-gray-900 dark:text-gray-100 truncate"
+                        <div class="eclipse-image-card-content">
+                            <p class="eclipse-image-card-title"
                                 x-text="getLocalizedName(image)"></p>
-                            <p class="text-xs text-gray-600 dark:text-gray-400 line-clamp-1"
+                            <p class="eclipse-image-card-description"
                                 x-text="getLocalizedDescription(image)" x-show="getLocalizedDescription(image)"></p>
-                            <div class="flex flex-wrap items-center justify-between mt-2">
-                                <div class="flex items-center gap-2">
+                            <div class="eclipse-image-card-actions">
+                                <div class="eclipse-image-card-buttons">
                                     <x-filament::button size="xs" color="gray" icon="heroicon-m-pencil-square"
-                                        x-on:click="$wire.mountFormComponentAction('{{ $statePath }}', 'editImage', { arguments: { uuid: image.uuid, selectedLocale: getLocale() } })">
+                                        x-on:click="$wire.mountAction('editImage', { uuid: image.uuid, selectedLocale: getLocale() }, { schemaComponent: '{{ $componentKey }}' })">
                                         Edit
                                     </x-filament::button>
 
                                     <x-filament::button size="xs" color="danger" icon="heroicon-m-trash"
-                                        x-on:click="$wire.mountFormComponentAction('{{ $statePath }}', 'deleteImage', { arguments: { uuid: image.uuid } })">
+                                        x-on:click="$wire.mountAction('deleteImage', { uuid: image.uuid }, { schemaComponent: '{{ $componentKey }}' })">
                                         Delete
                                     </x-filament::button>
                                 </div>
@@ -196,7 +197,7 @@
                                 @if ($getAllowBulkDelete())
                                 <x-filament::input.checkbox :checked="false"
                                     x-bind:checked="selectedImages.includes(image.uuid)"
-                                    x-on:change="toggleImageSelection(image.uuid)" class="flex-shrink-0" />
+                                    x-on:change="toggleImageSelection(image.uuid)" />
                                 @endif
                             </div>
                         </div>
@@ -206,15 +207,14 @@
         </div>
 
         <div x-show="!state || state.length === 0"
-            class="text-center rounded-xl bg-gray-50/30 dark:bg-gray-900/30 min-h-[280px] flex flex-col items-center justify-center gap-6 py-12 px-6 border-2 border-dashed border-gray-300 dark:border-gray-600"
-            style="border-style: dashed !important;">
-            <div class="flex flex-col items-center gap-4">
-                <div class="p-4 rounded-full bg-gray-100 dark:bg-gray-800">
-                    <x-filament::icon icon="heroicon-o-photo" class="h-12 w-12 text-gray-400 dark:text-gray-500" />
+            class="eclipse-media-gallery-empty">
+            <div class="eclipse-media-gallery-empty-content">
+                <div class="eclipse-media-gallery-empty-icon-wrapper">
+                    <x-filament::icon icon="heroicon-o-photo" class="eclipse-media-gallery-empty-icon" />
                 </div>
-                <div class="space-y-2">
-                    <p class="text-base font-semibold text-gray-700 dark:text-gray-200">No images uploaded yet</p>
-                    <p class="text-sm text-gray-500 dark:text-gray-400 max-w-sm">
+                <div class="eclipse-media-gallery-empty-text">
+                    <p class="eclipse-media-gallery-empty-title">No images uploaded yet</p>
+                    <p class="eclipse-media-gallery-empty-description">
                         @if ($getAllowFileUploads() || $getAllowUrlUploads())
                             Click "Upload Files" or "Add from URL" to add your first image
                         @else
@@ -224,7 +224,7 @@
                 </div>
 
                 @if ($getAllowFileUploads() || $getAllowUrlUploads())
-                    <div class="flex items-center gap-3 mt-2">
+                    <div class="eclipse-media-gallery-empty-actions">
                         @if ($getAllowFileUploads() && $getAction('upload'))
                             {{ $getAction('upload') }}
                         @endif

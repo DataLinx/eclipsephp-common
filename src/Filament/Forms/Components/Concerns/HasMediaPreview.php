@@ -51,14 +51,7 @@ trait HasMediaPreview
         return $this;
     }
 
-    public function columns(array|string|int|null $columns = 2): static
-    {
-        $this->mediaColumns = $columns;
-
-        return $this;
-    }
-
-    public function gridColumns(int $columns): static
+    public function mediaColumns(array|string|int|null $columns = 2): static
     {
         $this->mediaColumns = $columns;
 
@@ -85,7 +78,7 @@ trait HasMediaPreview
         return $this->evaluate($this->thumbnailHeight);
     }
 
-    public function getColumns(?string $breakpoint = null): array|string|int|null
+    public function getMediaColumns(?string $breakpoint = null): array|string|int|null
     {
         $columns = $this->evaluate($this->mediaColumns);
 
@@ -98,7 +91,7 @@ trait HasMediaPreview
 
     public function getGridStyle(): string
     {
-        $columns = $this->getColumns();
+        $columns = $this->getMediaColumns();
 
         if (is_array($columns)) {
             $default = $columns['default'] ?? 4;
@@ -130,17 +123,6 @@ trait HasMediaPreview
 
     public function getGridClasses(): string
     {
-        return 'grid gap-3';
-    }
-
-    public function getGridColumns(): int
-    {
-        $columns = $this->getColumns();
-
-        if (is_array($columns)) {
-            return $columns['default'] ?? 4;
-        }
-
-        return (int) ($columns ?? 4);
+        return 'eclipse-media-gallery-grid';
     }
 }

@@ -7,7 +7,7 @@ use Eclipse\Common\Filament\Forms\Components\Concerns\CanManageMediaCollections;
 use Eclipse\Common\Filament\Forms\Components\Concerns\HasMediaPreview;
 use Eclipse\Common\Filament\Forms\Components\Concerns\HasMediaUploadOptions;
 use Exception;
-use Filament\Forms\Components\Actions\Action;
+use Filament\Actions\Action;
 use Filament\Forms\Components\Concerns\HasLoadingMessage;
 use Filament\Forms\Components\Concerns\HasNestedRecursiveValidationRules;
 use Filament\Forms\Components\Concerns\HasPlaceholder;
@@ -192,38 +192,13 @@ class MediaGallery extends Field
 
     public function getAvailableLocales(): array
     {
-        $locales = [];
-
-        try {
-            $livewire = $this->getLivewire();
-
-            if ($livewire && method_exists($livewire, 'getTranslatableLocales')) {
-                $plugin = filament('spatie-laravel-translatable');
-                foreach ($livewire->getTranslatableLocales() as $locale) {
-                    $locales[$locale] = $plugin->getLocaleLabel($locale) ?? $locale;
-                }
-            }
-        } catch (Exception $e) {
+        if (class_exists(\Eclipse\Core\Models\Locale::class)) {
+            return \Eclipse\Core\Models\Locale::getAvailableLocales()
+                ->pluck('name', 'id')
+                ->toArray();
         }
 
-        if (empty($locales)) {
-            $locales = config('eclipsephp.locales', ['en' => 'English']);
-        }
-
-        return $locales;
-    }
-
-    public function getSelectedLocale(): string
-    {
-        try {
-            $livewire = $this->getLivewire();
-            if ($livewire && property_exists($livewire, 'activeLocale')) {
-                return $livewire->activeLocale;
-            }
-        } catch (Exception $e) {
-        }
-
-        return app()->getLocale();
+        return ['en' => 'English'];
     }
 
     public function imageConversions(array|Closure $conversions): static
@@ -863,7 +838,6 @@ class MediaGallery extends Field
             ->form(function (array $arguments) {
                 $args = $arguments['arguments'] ?? $arguments;
                 $uuid = $args['uuid'] ?? null;
-                $selectedLocale = $args['selectedLocale'] ?? $this->getSelectedLocale();
                 $state = $this->getState();
                 $image = collect($state)->firstWhere('uuid', $uuid);
 
@@ -871,7 +845,16 @@ class MediaGallery extends Field
                     return [];
                 }
 
-                $locales = $this->getAvailableLocales();
+                // Get locales directly from database to avoid any caching issues
+                $locales = [];
+                if (class_exists(\Eclipse\Core\Models\Locale::class)) {
+                    $locales = \Eclipse\Core\Models\Locale::getAvailableLocales()
+                        ->pluck('name', 'id')
+                        ->toArray();
+                }
+                if (empty($locales)) {
+                    $locales = ['en' => 'English'];
+                }
 
                 $fields = [];
 
@@ -884,26 +867,25 @@ class MediaGallery extends Field
                         ]);
                     });
 
-                if (count($locales) > 1) {
-                    $fields[] = Select::make('edit_locale')
-                        ->label('Language')
-                        ->options($locales)
-                        ->default($selectedLocale)
-                        ->live()
-                        ->afterStateUpdated(function ($state, $set) use ($image) {
-                            $set('name', $image['name'][$state] ?? '');
-                            $set('description', $image['description'][$state] ?? '');
-                        });
-                }
+                $defaultLocale = array_key_first($locales);
+                $fields[] = Select::make('locale')
+                    ->label('Language')
+                    ->options($locales)
+                    ->default($defaultLocale)
+                    ->live()
+                    ->afterStateUpdated(function ($state, $set) use ($image) {
+                        $set('name', $image['name'][$state] ?? '');
+                        $set('description', $image['description'][$state] ?? '');
+                    });
 
                 $fields[] = TextInput::make('name')
                     ->label('Name')
-                    ->default($image['name'][$selectedLocale] ?? '');
+                    ->default($image['name'][$defaultLocale] ?? '');
 
                 $fields[] = Textarea::make('description')
                     ->label('Description')
                     ->rows(3)
-                    ->default($image['description'][$selectedLocale] ?? '');
+                    ->default($image['description'][$defaultLocale] ?? '');
 
                 return $fields;
             })
@@ -916,13 +898,13 @@ class MediaGallery extends Field
                 }
 
                 $record = $this->getRecord();
+                $locale = $data['locale'] ?? array_key_first($this->getAvailableLocales());
 
                 if (! $record) {
                     $state = $this->getState();
                     $imageIndex = collect($state)->search(fn ($item) => $item['uuid'] === $uuid);
 
                     if ($imageIndex !== false) {
-                        $locale = $data['edit_locale'] ?? array_key_first($this->getAvailableLocales());
                         $state[$imageIndex]['name'][$locale] = $data['name'] ?? '';
                         $state[$imageIndex]['description'][$locale] = $data['description'] ?? '';
 
@@ -942,7 +924,6 @@ class MediaGallery extends Field
                     $nameTranslations = $media->getCustomProperty('name', []);
                     $descriptionTranslations = $media->getCustomProperty('description', []);
 
-                    $locale = $data['edit_locale'] ?? array_key_first($this->getAvailableLocales());
                     $nameTranslations[$locale] = $data['name'] ?? '';
                     $descriptionTranslations[$locale] = $data['description'] ?? '';
 

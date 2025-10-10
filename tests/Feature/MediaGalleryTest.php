@@ -1,7 +1,7 @@
 <?php
 
 use Eclipse\Common\Filament\Forms\Components\MediaGallery;
-use Filament\Forms\Components\Actions\Action;
+use Filament\Actions\Action;
 
 test('media gallery can be configured with collection', function () {
     $field = MediaGallery::make('images')
@@ -12,12 +12,12 @@ test('media gallery can be configured with collection', function () {
 
 test('media gallery can be configured with preview options', function () {
     $field = MediaGallery::make('images')
-        ->columns(6)
+        ->mediaColumns(6)
         ->thumbnailHeight(200)
         ->lightbox(false)
         ->orderable(false);
 
-    expect($field->getColumns())->toBe(6)
+    expect($field->getMediaColumns())->toBe(6)
         ->and($field->getThumbnailHeight())->toBe(200)
         ->and($field->hasLightbox())->toBeFalse()
         ->and($field->isDragReorderable())->toBeFalse();
@@ -53,7 +53,7 @@ test('media gallery has correct default values', function () {
 
     expect($field->hasLightbox())->toBeFalse()
         ->and($field->isDragReorderable())->toBeFalse()
-        ->and($field->getColumns())->toBe(4)
+        ->and($field->getMediaColumns())->toBe(4)
         ->and($field->getThumbnailHeight())->toBe(150)
         ->and($field->getAllowFileUploads())->toBeFalse()
         ->and($field->getAllowUrlUploads())->toBeFalse();
@@ -138,32 +138,30 @@ test('media gallery reorder action has correct properties', function () {
 
 test('media gallery supports responsive columns', function () {
     $field = MediaGallery::make('images')
-        ->columns([
+        ->mediaColumns([
             'default' => 2,
             'sm' => 3,
             'lg' => 4,
             'xl' => 6,
         ]);
 
-    expect($field->getColumns())->toBe([
+    expect($field->getMediaColumns())->toBe([
         'default' => 2,
         'sm' => 3,
         'lg' => 4,
         'xl' => 6,
     ])
-        ->and($field->getGridColumns())->toBe(2)
-        ->and($field->getGridClasses())->toBe('grid gap-3')
+        ->and($field->getGridClasses())->toBe('eclipse-media-gallery-grid')
         ->and($field->getGridStyle())->toContain('grid-template-columns: repeat(2, 1fr)')
         ->and($field->getGridStyle())->toContain('@media (min-width: 640px)')
         ->and($field->getGridStyle())->toContain('@media (min-width: 1024px)');
 });
 
 test('media gallery columns method works with simple integer', function () {
-    $field = MediaGallery::make('images')->columns(5);
+    $field = MediaGallery::make('images')->mediaColumns(5);
 
-    expect($field->getColumns())->toBe(5)
-        ->and($field->getGridColumns())->toBe(5)
-        ->and($field->getGridClasses())->toBe('grid gap-3')
+    expect($field->getMediaColumns())->toBe(5)
+        ->and($field->getGridClasses())->toBe('eclipse-media-gallery-grid')
         ->and($field->getGridStyle())->toBe('grid-template-columns: repeat(5, 1fr);');
 });
 

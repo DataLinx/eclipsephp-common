@@ -37,13 +37,10 @@ class CommonServiceProvider extends PackageServiceProvider
     public function bootingPackage(): void
     {
         FilamentAsset::register([
-            Css::make('media-gallery', __DIR__.'/../resources/css/media-gallery.css'),
-            Js::make('media-gallery', __DIR__.'/../resources/js/media-gallery.js'),
-        ], package: static::$name);
-
-        FilamentAsset::register([
-            Css::make('slider-column', asset('vendor/eclipse-common/slider-column.css')),
-            Js::make('slider-column', asset('vendor/eclipse-common/slider-column.js')),
+            Css::make('media-gallery-styles', __DIR__.'/../resources/css/media-gallery.css'),
+            Js::make('media-gallery-scripts', __DIR__.'/../resources/js/media-gallery.js'),
+            Css::make('slider-column-styles', __DIR__.'/../resources/dist/slider-column.css'),
+            Js::make('slider-column-scripts', __DIR__.'/../resources/dist/slider-column.js'),
         ], 'eclipse-common');
 
         FilamentView::registerRenderHook(

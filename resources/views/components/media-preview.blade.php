@@ -1,8 +1,8 @@
-<div class="flex flex-col items-center space-y-2">
+<div class="eclipse-media-preview">
     <img
         src="{{ $url }}"
         alt="{{ $filename }}"
-        class="max-w-full max-h-48 object-contain rounded-lg shadow-sm"
+        class="eclipse-media-preview-image"
     />
-    <p class="text-xs text-gray-500 dark:text-gray-400">{{ $filename }}</p>
+    <p class="eclipse-media-preview-filename">{{ $filename }}</p>
 </div>

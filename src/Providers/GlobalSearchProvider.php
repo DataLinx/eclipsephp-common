@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * Global search provider that uses Laravel Scout for resources/models that implement it
  */
-class GlobalSearchProvider implements \Filament\GlobalSearch\Contracts\GlobalSearchProvider
+class GlobalSearchProvider implements \Filament\GlobalSearch\Providers\Contracts\GlobalSearchProvider
 {
     public function getResults(string $query): ?GlobalSearchResults
     {

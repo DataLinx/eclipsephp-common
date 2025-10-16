@@ -2,6 +2,7 @@
 
 namespace Eclipse\Common\Foundation\Plugins;
 
+use Exception;
 use Filament\Panel;
 use Illuminate\Support\Str;
 use ReflectionClass;
@@ -36,7 +37,7 @@ abstract class Plugin implements \Filament\Contracts\Plugin
     /**
      * Register any plugin services.
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function register(Panel $panel): void
     {

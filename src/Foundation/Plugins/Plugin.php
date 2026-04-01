@@ -41,13 +41,11 @@ abstract class Plugin implements \Filament\Contracts\Plugin
      */
     public function register(Panel $panel): void
     {
-        $panelName = ucfirst($panel->getId());
-
         // Discover all classes, even if directories do not exists — Filament already checks and skips those
-        $panel->discoverResources($this->getPanelPath($panelName, 'Resources'), $this->getPanelNamespace($panelName, 'Resources'));
-        $panel->discoverPages($this->getPanelPath($panelName, 'Pages'), $this->getPanelNamespace($panelName, 'Pages'));
-        $panel->discoverClusters($this->getPanelPath($panelName, 'Clusters'), $this->getPanelNamespace($panelName, 'Clusters'));
-        $panel->discoverWidgets($this->getPanelPath($panelName, 'Widgets'), $this->getPanelNamespace($panelName, 'Widgets'));
+        $panel->discoverResources($this->getClassPath('Resources'), $this->getClassNamespace('Resources'));
+        $panel->discoverPages($this->getClassPath('Pages'), $this->getClassNamespace('Pages'));
+        $panel->discoverClusters($this->getClassPath('Clusters'), $this->getClassNamespace('Clusters'));
+        $panel->discoverWidgets($this->getClassPath('Widgets'), $this->getClassNamespace('Widgets'));
     }
 
     /**
@@ -66,28 +64,14 @@ abstract class Plugin implements \Filament\Contracts\Plugin
         return $this->basePath.($path ? "/$path" : '');
     }
 
-    /**
-     * Get the absolute path to the panel directory for the specified class.
-     *
-     * @param  string  $panelName  Panel name (e.g. `Admin`)
-     * @param  string  $classDir  Class dir (e.g. `Resource`)
-     * @return string Absolute path for the specified class (e.g. `/app/vendor/eclipsephp/cms-plugin/src/Admin/Filament/Resource`)
-     */
-    protected function getPanelPath(string $panelName, string $classDir): string
+    protected function getClassPath(string $classDir): string
     {
-        return $this->getPath('src')."/$panelName/Filament/$classDir";
+        return $this->getPath('src')."/Filament/$classDir";
     }
 
-    /**
-     * Get the full panel namespace for the specified class.
-     *
-     * @param  string  $panelName  Panel name (e.g. `Admin`)
-     * @param  string  $classDir  Class dir (e.g. `Resource`)
-     * @return string Full namespace for the specified class (e.g. `Eclipse\Cms\Admin\Resource`)
-     */
-    protected function getPanelNamespace(string $panelName, string $classDir): string
+    protected function getClassNamespace(string $classDir): string
     {
-        return "$this->pluginNamespace\\$panelName\\Filament\\$classDir";
+        return "$this->pluginNamespace\\Filament\\$classDir";
     }
 
     /**

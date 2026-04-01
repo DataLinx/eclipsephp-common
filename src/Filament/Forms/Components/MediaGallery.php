@@ -6,6 +6,7 @@ use Closure;
 use Eclipse\Common\Filament\Forms\Components\Concerns\CanManageMediaCollections;
 use Eclipse\Common\Filament\Forms\Components\Concerns\HasMediaPreview;
 use Eclipse\Common\Filament\Forms\Components\Concerns\HasMediaUploadOptions;
+use Eclipse\Core\Models\Locale;
 use Exception;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Concerns\HasLoadingMessage;
@@ -192,8 +193,8 @@ class MediaGallery extends Field
 
     public function getAvailableLocales(): array
     {
-        if (class_exists(\Eclipse\Core\Models\Locale::class)) {
-            return \Eclipse\Core\Models\Locale::getAvailableLocales()
+        if (class_exists(Locale::class)) {
+            return Locale::getAvailableLocales()
                 ->pluck('name', 'id')
                 ->toArray();
         }
@@ -847,8 +848,8 @@ class MediaGallery extends Field
 
                 // Get locales directly from database to avoid any caching issues
                 $locales = [];
-                if (class_exists(\Eclipse\Core\Models\Locale::class)) {
-                    $locales = \Eclipse\Core\Models\Locale::getAvailableLocales()
+                if (class_exists(Locale::class)) {
+                    $locales = Locale::getAvailableLocales()
                         ->pluck('name', 'id')
                         ->toArray();
                 }

@@ -16,6 +16,7 @@ class CommonServiceProvider extends PackageServiceProvider
     public function configurePackage(SpatiePackage|Package $package): void
     {
         $package->name(static::$name)
+            ->hasConfigFile()
             ->hasTranslations()
             ->hasViews()
             ->hasAssets();

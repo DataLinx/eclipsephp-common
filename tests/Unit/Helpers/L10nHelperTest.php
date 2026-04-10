@@ -1,7 +1,7 @@
 <?php
 
-use Eclipse\Common\Helpers\L10nHelper as Helper;
 use Eclipse\Common\Exceptions\InvalidConfigurationException;
+use Eclipse\Common\Helpers\L10nHelper as Helper;
 use Illuminate\Support\Facades\Config;
 
 test('it returns empty string for empty language code', function () {

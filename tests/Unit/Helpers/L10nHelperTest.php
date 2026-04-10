@@ -60,7 +60,7 @@ test('it trims the language code', function () {
 test('it can get available locales from array config', function () {
     Config::set('eclipse-common.available_locales', ['en', 'sl']);
 
-    $locales = Helper::getAvailable();
+    $locales = Helper::getAvailableLocales();
 
     expect($locales)->toBeArray()
         ->and($locales)->toHaveCount(2)
@@ -70,7 +70,7 @@ test('it can get available locales from array config', function () {
 test('it can get available locales from callable config', function () {
     Config::set('eclipse-common.available_locales', fn () => ['en', 'de']);
 
-    $locales = Helper::getAvailable();
+    $locales = Helper::getAvailableLocales();
 
     expect($locales)->toBeArray()
         ->and($locales)->toHaveCount(2)
@@ -80,21 +80,21 @@ test('it can get available locales from callable config', function () {
 test('it throws exception for invalid locales configuration', function () {
     Config::set('eclipse-common.available_locales', 'invalid');
 
-    expect(fn () => Helper::getAvailable())
+    expect(fn () => Helper::getAvailableLocales())
         ->toThrow(InvalidConfigurationException::class, 'Configuration "eclipse-common.available_locales" must be an array or a callable that returns an array.');
 });
 
 test('it throws exception for empty locales configuration', function () {
     Config::set('eclipse-common.available_locales', []);
 
-    expect(fn () => Helper::getAvailable())
+    expect(fn () => Helper::getAvailableLocales())
         ->toThrow(InvalidConfigurationException::class, 'Configuration "eclipse-common.available_locales" must contain at least one locale.');
 });
 
 test('it can get options for locales', function () {
     Config::set('eclipse-common.available_locales', ['en', 'sl']);
 
-    $options = Helper::getOptions();
+    $options = Helper::getLocaleOptions();
 
     expect($options)->toBeArray()
         ->and($options)->toHaveCount(2)

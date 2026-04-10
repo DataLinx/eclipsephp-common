@@ -13,7 +13,7 @@ class L10nHelper
      * @return string[]
      * @throws InvalidConfigurationException
      */
-    public static function getAvailable(): array
+    public static function getAvailableLocales(): array
     {
         $config = config('eclipse-common.available_locales');
 
@@ -40,9 +40,9 @@ class L10nHelper
      * @return string[]
      * @throws InvalidConfigurationException
      */
-    public static function getOptions(): array
+    public static function getLocaleOptions(): array
     {
-        return array_map(fn ($locale) => static::getLanguageName($locale, true), static::getAvailable());
+        return array_map(fn ($locale) => static::getLanguageName($locale, true), static::getAvailableLocales());
     }
 
     /**

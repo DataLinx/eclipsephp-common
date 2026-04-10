@@ -1,10 +1,10 @@
 <?php
 
-use Eclipse\Common\CommonPlugin;
 use Eclipse\Common\Admin\Filament\Clusters\Settings;
+use Eclipse\Common\CommonPlugin;
 
 it('can get and set settings cluster', function () {
-    $plugin = new CommonPlugin();
+    $plugin = new CommonPlugin;
 
     expect($plugin->getSettingsCluster())->toBe(Settings::class);
 

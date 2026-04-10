@@ -10,6 +10,16 @@ class L10nHelper
     /**
      * Get the available locale codes from the configuration.
      *
+     * The method returns an associative array of locales, where the element key is always the same as the value.
+     *
+     * Example:
+     * ```
+     * [
+     *     'en' => 'en',
+     *     'sl' => 'sl',
+     * ]
+     * ```
+     *
      * @return string[]
      *
      * @throws InvalidConfigurationException
@@ -35,8 +45,19 @@ class L10nHelper
     }
 
     /**
-     * Get a list of available locales for the application.
-     * Returns an array of locale codes (as keys) and their corresponding names (as values).
+     * Get the available locale options for use in select boxes or similar UI elements.
+     *
+     * The method returns an associative array of locales, where the element key is the locale code and the element value is the language name.
+     *
+     * Example:
+     * ```
+     * [
+     *     'en' => 'English',
+     *     'sl' => 'Slovenian',
+     * ]
+     * ```
+     *
+     * Please note: **The language name is provided by the `intl` PHP extension, therefore, you must have it installed to use this method.**
      *
      * @return string[]
      *
@@ -51,6 +72,14 @@ class L10nHelper
      * Get the language name from the language code.
      * 1. If the `intl` PHP extension is installed, use the `\Locale` class to get the language name.
      * 2. Otherwise, return the language code
+     *
+     * Examples:
+     * ```
+     * L10nHelper::getLanguageName('en') // English
+     * L10nHelper::getLanguageName('sl') // Slovenian
+     * L10nHelper::getLanguageName('sl', true) // Slovenian (sl)
+     * L10nHelper::getLanguageName('xx') // xx
+     * ```
      *
      * @param  string  $code  Language code
      * @param  bool  $include_code  Include the language code in the output (in parentheses)

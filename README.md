@@ -12,8 +12,8 @@
 This package contains all common non-opinionated code that is used in our Eclipse Filament plugins.
 
 ## Requirements
-- PHP >= 8.2 (due to Pest 3 requirement)
-- Filament 3
+- PHP 8.2
+- Filament 4
 - Filament Shield plugin (to manage permissions)
 - Laravel Scout
 

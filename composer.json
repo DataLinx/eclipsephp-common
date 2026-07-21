@@ -40,9 +40,8 @@
     },
     "require": {
         "php": "^8.2",
-        "bezhansalleh/filament-shield": "^4.0",
-        "datalinx/php-utils": "^2.5",
         "ext-intl": "*",
+        "datalinx/php-utils": "^2.5",
         "filament/filament": "^4.0",
         "filament/spatie-laravel-settings-plugin": "^4.0",
         "laravel/scout": "^10.14",
@@ -72,8 +71,6 @@
             "@php vendor/bin/testbench serve --ansi"
         ],
         "setup": [
-            "@php vendor/bin/testbench vendor:publish --provider='Spatie\\Permission\\PermissionServiceProvider'",
-            "@php vendor/bin/testbench vendor:publish --tag='filament-shield-config'",
             "@php vendor/bin/testbench package:sync-skeleton"
         ]
     },

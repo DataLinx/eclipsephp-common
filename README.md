@@ -14,6 +14,7 @@ This package contains all common non-opinionated code that is used in our Eclips
 ## Requirements
 - PHP 8.2
 - Filament 4
+- Filament Shield plugin (to manage permissions)
 - Laravel Scout
 
 See [composer.json](composer.json) for details.

@@ -2,11 +2,11 @@
 name: eclipsephp-common
 services:
   appserver:
-    type: php:8.2
+    type: php:8.3
     xdebug: "debug,develop,coverage"
     via: cli
     overrides:
-      image: slimdeluxe/php:8.2-v1.5
+      image: slimdeluxe/php:8.3-v1.5
 tooling:
   php:
     service: appserver

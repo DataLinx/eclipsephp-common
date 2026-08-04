@@ -49,9 +49,9 @@
     },
     "require-dev": {
         "laravel/pint": "^1.21",
-        "orchestra/testbench": "^10.1",
-        "pestphp/pest": "^4.0",
-        "pestphp/pest-plugin-livewire": "^4.0"
+        "orchestra/testbench": "^10.11|^11.1",
+        "pestphp/pest": "^4.7",
+        "pestphp/pest-plugin-livewire": "^4.1"
     },
     "scripts": {
         "post-autoload-dump": [

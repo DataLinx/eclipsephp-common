@@ -2,7 +2,9 @@
 
 namespace Workbench\App\Providers;
 
+use Filament\FilamentServiceProvider;
 use Illuminate\Support\ServiceProvider;
+use Livewire\LivewireServiceProvider;
 
 class WorkbenchServiceProvider extends ServiceProvider
 {
@@ -11,6 +13,8 @@ class WorkbenchServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        $this->app->register(LivewireServiceProvider::class);
+        $this->app->register(FilamentServiceProvider::class);
         $this->app->register(AdminPanelProvider::class);
     }
 

@@ -2,7 +2,9 @@
 
 use Eclipse\Common\Exceptions\InvalidConfigurationException;
 use Eclipse\Common\Helpers\L10nHelper as Helper;
+use Eclipse\Common\Support\Callback;
 use Illuminate\Support\Facades\Config;
+use Tests\Support\ConfigLocaleCallback;
 
 test('it returns empty string for empty language code', function () {
     expect(Helper::getLanguageName(''))->toBe('');
@@ -67,14 +69,14 @@ test('it can get available locales from array config', function () {
         ->and($locales)->toBe(['en' => 'en', 'sl' => 'sl']);
 });
 
-test('it can get available locales from callable config', function () {
-    Config::set('eclipse-common.available_locales', fn () => ['en', 'de']);
+test('it can get available locales from Callback config', function () {
+    Config::set('eclipse-common.available_locales', new Callback(ConfigLocaleCallback::class, 'getLocales'));
 
     $locales = Helper::getAvailableLocales();
 
     expect($locales)->toBeArray()
-        ->and($locales)->toHaveCount(2)
-        ->and($locales)->toBe(['en' => 'en', 'de' => 'de']);
+        ->and($locales)->toHaveCount(3)
+        ->and($locales)->toBe(['en' => 'en', 'sl' => 'sl', 'de' => 'de']);
 });
 
 test('it throws exception for invalid locales configuration', function () {

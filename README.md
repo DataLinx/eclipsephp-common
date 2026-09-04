@@ -12,8 +12,8 @@
 This package contains all common non-opinionated code that is used in our Eclipse Filament plugins.
 
 ## Requirements
-- PHP 8.2
-- Filament 4
+- Supported PHP versions: 8.3–8.4
+- Filament 5
 - Laravel Scout
 
 See [composer.json](composer.json) for details.

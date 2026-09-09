@@ -5,6 +5,7 @@
 This file contains common instructions for AI systems working on Eclipse PHP packages. It can be included in `AGENTS.md`
 of any other package.
 This lowers the maintenance burden and keeps the instructions consistent across packages.
+All paths and commands in this file are relative to the root of the package.
 
 ## Project setup
 

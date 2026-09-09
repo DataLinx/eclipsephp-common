@@ -1,7 +1,7 @@
 # AI Instructions
 
 ## Common guidelines
-All AI systems should follow the common guidelines outlined in [docs/ai-guidelines.md](docs/ai-guidelines.md).
+All AI systems should follow the common guidelines outlined in [resources/ai/guidelines.md](resources/ai/guidelines.md).
 
 ## Project Specifics
 

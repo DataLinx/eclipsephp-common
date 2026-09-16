@@ -1,4 +1,6 @@
+/public/css
+/public/fonts
+/public/js
+/vendor
+
 .env
-.env.dusk
-storage
-vendor

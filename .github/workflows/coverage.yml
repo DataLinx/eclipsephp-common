@@ -1,0 +1,68 @@
+name: Coverage
+
+on:
+  # Run testing on all push and pull requests that have committed changes in PHP files
+  push:
+    paths:
+      - '**/*.php'
+  pull_request:
+    paths:
+      - '**/*.php'
+  # Make it possible to run the workflow manually
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  coverage:
+
+    runs-on: ubuntu-latest
+
+    name: Code coverage report
+
+    steps:
+
+      #- name: Configure operating system
+      #  run: sudo apt-get update && sudo apt-get install -y locales locales-all
+
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+
+      - name: Validate composer.json and composer.lock
+        run: composer validate --strict
+
+      - name: Cache Composer packages
+        id: composer-cache
+        uses: actions/cache@v6
+        with:
+          path: vendor
+          key: coverage-${{ hashFiles('**/composer.lock') }}
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@2.37.2
+        with:
+          php-version: '8.3'
+          coverage: xdebug
+          extensions: mbstring, gd, intl, pcntl
+
+      - name: Install dependencies
+        run: composer update --prefer-dist --no-progress --prefer-stable
+
+      - name: Setup testbench environment
+        run: |
+          composer setup
+          sed -i 's/APP_ENV=local/APP_ENV=testing/' workbench/.env
+
+      - name: Run test suite with coverage
+        run: vendor/bin/pest --coverage-clover ./coverage.xml
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v7.1.0
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        with:
+          files: ./coverage.xml
+          verbose: true

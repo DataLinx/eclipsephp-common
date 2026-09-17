@@ -20,7 +20,7 @@ jobs:
     steps:
 
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6.1.0
         with:
           # Checkout the actual branch, not a specific commit
           ref: ${{ github.head_ref || github.ref_name }}
@@ -31,6 +31,6 @@ jobs:
         uses: aglipanci/laravel-pint-action@latest
 
       - name: Commit changes
-        uses: stefanzweifel/git-auto-commit-action@v5
+        uses: stefanzweifel/git-auto-commit-action@v7.2.0
         with:
           commit_message: "style: fix code style"

@@ -16,6 +16,12 @@ use Tests\TestCase;
 
 uses(TestCase::class)
     ->use(RefreshDatabase::class)
+    ->beforeEach(function () {
+        // Migrate database and seed permissions manually
+        $this->migrate();
+
+        $this->setUpUser();
+    })
     ->in(__DIR__);
 
 /*

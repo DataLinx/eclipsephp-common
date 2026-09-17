@@ -1,0 +1,2 @@
+# Do not track mcp.json, because the path to the php executeable can vary between systems
+mcp/mcp.json

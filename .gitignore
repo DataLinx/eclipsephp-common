@@ -12,3 +12,8 @@
 /node_modules
 /phpunit.xml
 /vendor
+
+# Laravel Boost generated files
+/.junie
+/workbench/boost.json
+AGENTS.md

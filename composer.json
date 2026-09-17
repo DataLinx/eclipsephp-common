@@ -49,6 +49,7 @@
         "spatie/laravel-package-tools": "^1.19"
     },
     "require-dev": {
+        "laravel/boost": "^2.9",
         "laravel/pint": "^1.21",
         "orchestra/testbench": "^9.17|^10.11|^11.2",
         "pestphp/pest": "^4.7",

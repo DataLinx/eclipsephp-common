@@ -3,3 +3,4 @@
 # JetBrains AI Assistant, Junie, Cursor, and Claude Code automatically respect the project's .gitignore in any location,
 # and also the system's global .gitignore file that may be specified in the `core.excludesfile` config parameter.
 # Only add any extra files that should be ignored by AI systems.
+!AGENTS.md

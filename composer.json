@@ -74,6 +74,7 @@
             "npm install",
             "@php vendor/bin/testbench filament:assets",
             "@php vendor/bin/testbench package:sync-skeleton",
+            "@php vendor/bin/testbench vendor:publish --tag=eclipse-ai-guidelines --force --ansi",
             "@php vendor/bin/testbench boost:update --ansi",
             "if [ -d workbench/.junie ]; then rsync -a workbench/.junie/ .junie/ && rm -rf workbench/.junie; fi"
         ]

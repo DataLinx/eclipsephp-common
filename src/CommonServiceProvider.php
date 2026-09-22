@@ -49,4 +49,11 @@ class CommonServiceProvider extends PackageServiceProvider
             fn (): string => view('eclipse-common::components.slider-column-lightbox')->render()
         );
     }
+
+    public function packageBooted(): void
+    {
+        $this->publishes([
+            __DIR__.'/../resources/ai/guidelines.md' => base_path('.ai/guidelines/20-common-ai-guidelines.md'),
+        ], 'eclipse-ai-guidelines');
+    }
 }

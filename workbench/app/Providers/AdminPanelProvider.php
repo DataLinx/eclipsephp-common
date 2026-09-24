@@ -16,6 +16,7 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Workbench\App\Filament\Resources\Users\UserResource;
 use Workbench\App\Http\Middleware\WorkbenchBootstrap;
 
 class AdminPanelProvider extends PanelProvider
@@ -48,6 +49,9 @@ class AdminPanelProvider extends PanelProvider
             ->viteTheme(false)
             ->pages([
                 Dashboard::class,
+            ])
+            ->resources([
+                UserResource::class,
             ]);
     }
 }

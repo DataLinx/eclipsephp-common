@@ -5,5 +5,5 @@
 # Only add any extra files that should be ignored by AI systems. You cannot, however, unblock files that are git-ignored.
 
 # Do not include content that is already included in AGENTS.md
+.ai/guidelines
 resources/ai/guidelines.md
-workbench/.ai/guidelines

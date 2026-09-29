@@ -19,6 +19,8 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Workbench\App\Filament\Resources\Users\UserResource;
 use Workbench\App\Http\Middleware\WorkbenchBootstrap;
 
+use function Orchestra\Testbench\package_path;
+
 class AdminPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
@@ -52,6 +54,8 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->resources([
                 UserResource::class,
-            ]);
+            ])
+            ->discoverClusters(in: package_path('src/Filament/Clusters'), for: 'Eclipse\\Common\\Filament\\Clusters')
+            ->discoverPages(in: app_path('Filament/Pages'), for: 'Workbench\\App\\Filament\\Pages');
     }
 }

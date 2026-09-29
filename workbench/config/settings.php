@@ -1,11 +1,10 @@
 <?php
 
-use Spatie\LaravelData\Data;
-use Spatie\LaravelSettings\SettingsCasts\DataCast;
 use Spatie\LaravelSettings\SettingsCasts\DateTimeInterfaceCast;
 use Spatie\LaravelSettings\SettingsCasts\DateTimeZoneCast;
 use Spatie\LaravelSettings\SettingsRepositories\DatabaseSettingsRepository;
 use Spatie\LaravelSettings\SettingsRepositories\RedisSettingsRepository;
+use Workbench\App\Settings\ExampleSettings;
 
 return [
 
@@ -14,7 +13,7 @@ return [
      * put them (manually) here.
      */
     'settings' => [
-
+        ExampleSettings::class,
     ],
 
     /*
@@ -88,7 +87,7 @@ return [
         DateTimeInterface::class => DateTimeInterfaceCast::class,
         DateTimeZone::class => DateTimeZoneCast::class,
         //        Spatie\DataTransferObject\DataTransferObject::class => Spatie\LaravelSettings\SettingsCasts\DtoCast::class,
-        Data::class => DataCast::class,
+        //        Spatie\LaravelData\Data::class => Spatie\LaravelSettings\SettingsCasts\DataCast::class,
     ],
 
     /*

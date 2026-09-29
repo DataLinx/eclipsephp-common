@@ -8,7 +8,7 @@ use Filament\Support\Icons\Heroicon;
 
 class Settings extends Cluster
 {
-    protected static string | BackedEnum | null $navigationIcon = Heroicon::Cog6Tooth;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::Cog6Tooth;
 
     public static function getNavigationLabel(): string
     {

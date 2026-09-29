@@ -1,7 +1,7 @@
 <?php
 
-use Eclipse\Common\Admin\Filament\Clusters\Settings;
 use Eclipse\Common\CommonPlugin;
+use Eclipse\Common\Filament\Clusters\Settings;
 
 it('can get and set settings cluster', function () {
     $plugin = new CommonPlugin;

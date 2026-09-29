@@ -1,12 +1,14 @@
 <?php
 
-namespace Eclipse\Common\Admin\Filament\Clusters;
+namespace Eclipse\Common\Filament\Clusters;
 
+use BackedEnum;
 use Filament\Clusters\Cluster;
+use Filament\Support\Icons\Heroicon;
 
 class Settings extends Cluster
 {
-    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-cog-6-tooth';
+    protected static string | BackedEnum | null $navigationIcon = Heroicon::Cog6Tooth;
 
     public static function getNavigationLabel(): string
     {

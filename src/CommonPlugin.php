@@ -2,7 +2,7 @@
 
 namespace Eclipse\Common;
 
-use Eclipse\Common\Admin\Filament\Clusters\Settings;
+use Eclipse\Common\Filament\Clusters\Settings;
 use Eclipse\Common\Foundation\Plugins\Plugin;
 
 class CommonPlugin extends Plugin

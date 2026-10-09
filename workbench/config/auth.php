@@ -1,6 +1,6 @@
 <?php
 
-use Workbench\App\Models\User;
+use Eclipse\Common\Workbench\Models\User;
 
 return [
 

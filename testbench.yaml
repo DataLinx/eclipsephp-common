@@ -1,13 +1,13 @@
 laravel: './workbench'
 
 providers:
-  - Workbench\App\Providers\WorkbenchServiceProvider
+  - Eclipse\Common\Workbench\Providers\WorkbenchServiceProvider
 
 migrations:
   - workbench/database/migrations
 
 seeders:
-  - Workbench\Database\Seeders\DatabaseSeeder
+  - Eclipse\Common\Workbench\Database\Seeders\DatabaseSeeder
 
 workbench:
   start: '/'
@@ -21,7 +21,6 @@ workbench:
     views: false
   build:
     - asset-publish
-    - create-sqlite-db
     - db-wipe
     - migrate-fresh
   assets:

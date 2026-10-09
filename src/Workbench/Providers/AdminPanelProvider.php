@@ -1,8 +1,10 @@
 <?php
 
-namespace Workbench\App\Providers;
+namespace Eclipse\Common\Workbench\Providers;
 
 use Eclipse\Common\CommonPlugin;
+use Eclipse\Common\Workbench\Filament\Resources\Users\UserResource;
+use Eclipse\Common\Workbench\Http\Middleware\WorkbenchBootstrap;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -16,8 +18,6 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
-use Workbench\App\Filament\Resources\Users\UserResource;
-use Workbench\App\Http\Middleware\WorkbenchBootstrap;
 
 use function Orchestra\Testbench\package_path;
 
@@ -56,6 +56,7 @@ class AdminPanelProvider extends PanelProvider
                 UserResource::class,
             ])
             ->discoverClusters(in: package_path('src/Filament/Clusters'), for: 'Eclipse\\Common\\Filament\\Clusters')
-            ->discoverPages(in: app_path('Filament/Pages'), for: 'Workbench\\App\\Filament\\Pages');
+            ->discoverPages(in: app_path('Filament/Pages'), for: 'Workbench\\App\\Filament\\Pages')
+            ->discoverResources(in: app_path('Workbench/Filament/Resources'), for: 'Eclipse\\Common\\Workbench\\Filament\\Resources');
     }
 }

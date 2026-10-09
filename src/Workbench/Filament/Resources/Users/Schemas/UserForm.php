@@ -1,6 +1,6 @@
 <?php
 
-namespace Workbench\App\Filament\Resources\Users\Schemas;
+namespace Eclipse\Common\Workbench\Filament\Resources\Users\Schemas;
 
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\TextInput;

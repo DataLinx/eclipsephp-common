@@ -1,9 +1,9 @@
 <?php
 
-namespace Workbench\App\Filament\Resources\Users\Pages;
+namespace Eclipse\Common\Workbench\Filament\Resources\Users\Pages;
 
+use Eclipse\Common\Workbench\Filament\Resources\Users\UserResource;
 use Filament\Resources\Pages\CreateRecord;
-use Workbench\App\Filament\Resources\Users\UserResource;
 
 class CreateUser extends CreateRecord
 {

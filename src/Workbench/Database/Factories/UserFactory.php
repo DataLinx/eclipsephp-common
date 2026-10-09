@@ -1,14 +1,14 @@
 <?php
 
-namespace Workbench\Database\Factories;
+namespace Eclipse\Common\Workbench\Database\Factories;
 
+use Eclipse\Common\Workbench\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
-use Workbench\App\Models\User;
 
 /**
- * @template TModel of \Workbench\App\Models\User
+ * @template TModel of \Eclipse\Common\Workbench\Models\User
  *
  * @extends Factory<TModel>
  */

@@ -1,10 +1,10 @@
 <?php
 
-namespace Workbench\App\Filament\Resources\Users\Pages;
+namespace Eclipse\Common\Workbench\Filament\Resources\Users\Pages;
 
+use Eclipse\Common\Workbench\Filament\Resources\Users\UserResource;
 use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
-use Workbench\App\Filament\Resources\Users\UserResource;
 
 class EditUser extends EditRecord
 {

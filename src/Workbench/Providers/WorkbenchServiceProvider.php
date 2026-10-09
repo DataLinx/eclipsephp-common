@@ -1,6 +1,6 @@
 <?php
 
-namespace Workbench\App\Providers;
+namespace Eclipse\Common\Workbench\Providers;
 
 use Filament\FilamentServiceProvider;
 use Illuminate\Console\Events\CommandStarting;
@@ -25,6 +25,8 @@ class WorkbenchServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        $this->loadMigrationsFrom(__DIR__.'/../../../database/workbench/migrations');
+
         Event::listen(CommandStarting::class, function ($event) {
             if (str_starts_with($event->command, 'boost:')) {
                 // Make sure this actually points to your package root!

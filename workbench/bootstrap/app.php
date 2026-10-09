@@ -1,9 +1,9 @@
 <?php
 
+use Eclipse\Common\Workbench\Providers\WorkbenchServiceProvider;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
-use Workbench\App\Providers\WorkbenchServiceProvider;
 
 return Application::configure(basePath: $APP_BASE_PATH ?? dirname(__DIR__))
     ->withProviders([

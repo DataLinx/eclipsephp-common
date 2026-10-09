@@ -1,10 +1,10 @@
 <?php
 
-namespace Workbench\Database\Seeders;
+namespace Eclipse\Common\Workbench\Database\Seeders;
 
-use Illuminate\Database\Seeder;
+use Eclipse\Common\Workbench\Database\Factories\UserFactory;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Workbench\Database\Factories\UserFactory;
+use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {

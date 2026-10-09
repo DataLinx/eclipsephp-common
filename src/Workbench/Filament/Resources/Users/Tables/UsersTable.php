@@ -1,6 +1,6 @@
 <?php
 
-namespace Workbench\App\Filament\Resources\Users\Tables;
+namespace Eclipse\Common\Workbench\Filament\Resources\Users\Tables;
 
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;

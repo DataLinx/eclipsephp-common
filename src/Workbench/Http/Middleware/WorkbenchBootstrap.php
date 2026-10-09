@@ -1,14 +1,14 @@
 <?php
 
-namespace Workbench\App\Http\Middleware;
+namespace Eclipse\Common\Workbench\Http\Middleware;
 
 use Closure;
+use Eclipse\Common\Workbench\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Throwable;
-use Workbench\App\Models\User;
 
 class WorkbenchBootstrap
 {

@@ -1,18 +1,18 @@
 <?php
 
-namespace Workbench\App\Filament\Resources\Users;
+namespace Eclipse\Common\Workbench\Filament\Resources\Users;
 
 use BackedEnum;
+use Eclipse\Common\Workbench\Filament\Resources\Users\Pages\CreateUser;
+use Eclipse\Common\Workbench\Filament\Resources\Users\Pages\EditUser;
+use Eclipse\Common\Workbench\Filament\Resources\Users\Pages\ListUsers;
+use Eclipse\Common\Workbench\Filament\Resources\Users\Schemas\UserForm;
+use Eclipse\Common\Workbench\Filament\Resources\Users\Tables\UsersTable;
+use Eclipse\Common\Workbench\Models\User;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
-use Workbench\App\Filament\Resources\Users\Pages\CreateUser;
-use Workbench\App\Filament\Resources\Users\Pages\EditUser;
-use Workbench\App\Filament\Resources\Users\Pages\ListUsers;
-use Workbench\App\Filament\Resources\Users\Schemas\UserForm;
-use Workbench\App\Filament\Resources\Users\Tables\UsersTable;
-use Workbench\App\Models\User;
 
 class UserResource extends Resource
 {

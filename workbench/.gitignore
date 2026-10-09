@@ -1,6 +1,8 @@
+/database/*.sqlite*
 /public/css
 /public/fonts
 /public/js
+/public/vendor
 /vendor
 
 .env

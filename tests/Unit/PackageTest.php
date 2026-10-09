@@ -23,7 +23,7 @@ test('hasSettings throws exception when settings path does not exist', function 
 
 test('hasSettings throws exception when migrations path does not exist', function () {
     $package = new Package;
-    $package->setBasePath(__DIR__.'/../../workbench/app/TestPackage1/src');
+    $package->setBasePath(__DIR__.'/../Fixtures/TestPackage1/src');
 
     expect(fn () => $package->hasSettings())
         ->toThrow(RuntimeException::class, 'Settings migrations path does not exist: '.$package->rootPath('database/settings'));
@@ -31,7 +31,7 @@ test('hasSettings throws exception when migrations path does not exist', functio
 
 test('hasSettings configures paths when both directories exist', function () {
     $package = new Package;
-    $package->setBasePath(__DIR__.'/../../workbench/app/TestPackage2/src');
+    $package->setBasePath(__DIR__.'/../Fixtures/TestPackage2/src');
 
     $package->hasSettings();
 

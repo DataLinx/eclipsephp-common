@@ -69,7 +69,7 @@
         "prepare": "@php vendor/bin/testbench package:discover --ansi",
         "build": "@php vendor/bin/testbench workbench:build --ansi",
         "setup": [
-            "@php -r \"if (!file_exists('workbench/.env')) { copy('workbench/.env.example', 'workbench/.env'); echo '.env file created from .env.example\\n'; }\"",
+            "@php -r \"if (!file_exists('workbench/.env')) { copy('workbench/.env.example', 'workbench/.env'); echo '.env file created from .env.example\n'; }\"",
             "@php vendor/bin/testbench key:generate --ansi",
             "npm install",
             "@php vendor/bin/testbench filament:assets",

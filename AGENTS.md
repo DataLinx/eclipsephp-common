@@ -159,6 +159,12 @@ When working in this repository:
 7. Include tests for behavior changes.
 8. Mention any commands that should be run to verify the change.
 
+## Filament
+
+### Tables
+
+All Filament resource tables should use the `toggleable()`, `searchable()` and `sortable()` methods for all columns.
+
 === boost rules ===
 
 # Laravel Boost

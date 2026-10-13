@@ -7,6 +7,7 @@ use Illuminate\Console\Events\CommandStarting;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 use Livewire\LivewireServiceProvider;
+
 use function Orchestra\Sidekick\package_path;
 
 class WorkbenchServiceProvider extends ServiceProvider

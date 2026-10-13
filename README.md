@@ -79,6 +79,37 @@ Notes:
 - Use `lando test` for `package:test` and `lando testbench` for other Testbench commands.
 - No Telescope, websockets or health checks are enabled to keep the setup minimal.
 
+#### Using the workbench and test case in other packages
+
+Other Eclipse packages can reuse the shared workbench (panel, user model, migrations, seeder) and the base test case.
+
+1. Register the shared provider and seeder in the package's `testbench.yaml`:
+    ```yaml
+    providers:
+      - Eclipse\Common\Workbench\Providers\WorkbenchServiceProvider
+
+    seeders:
+      - Eclipse\Common\Workbench\Database\Seeders\DatabaseSeeder
+    ```
+2. Extend `Eclipse\Common\Testing\TestCase` in the package's `tests/TestCase.php`:
+    ```php
+    namespace Tests;
+
+    use Eclipse\Common\Foundation\Testing\TestCase as BaseTestCase;
+
+    abstract class TestCase extends BaseTestCase {}
+    ```
+   To use a different user model, override the `userModel()` method.
+3. Bind the test case in `tests/Pest.php`:
+    ```php
+    uses(Tests\TestCase::class)
+        ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
+        ->beforeEach(fn () => $this->migrate()->setUpUser())
+        ->in(__DIR__);
+    ```
+
+The package must have `orchestra/testbench` and `pestphp/pest` in its own `require-dev`.
+
 ### Changelog
 
 All notable changes to this project are automatically documented in the [CHANGELOG.md](CHANGELOG.md) file using the

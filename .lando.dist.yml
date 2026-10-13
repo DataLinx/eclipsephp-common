@@ -30,6 +30,17 @@ services:
       database: eclipse
       user: developer
       password: developer
+  pma:
+    type: phpmyadmin
+    hosts:
+      - database
+    database:
+      type: mariadb:10.11
+    overrides:
+      image: phpmyadmin
+proxy:
+  pma:
+    - pma.eclipse-common.lndo.site
 tooling:
   php:
     service: appserver

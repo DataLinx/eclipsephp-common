@@ -7,6 +7,7 @@ use Illuminate\Console\Events\CommandStarting;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 use Livewire\LivewireServiceProvider;
+use function Orchestra\Sidekick\package_path;
 
 class WorkbenchServiceProvider extends ServiceProvider
 {
@@ -29,8 +30,8 @@ class WorkbenchServiceProvider extends ServiceProvider
 
         Event::listen(CommandStarting::class, function ($event) {
             if (str_starts_with($event->command, 'boost:')) {
-                // Make sure this actually points to your package root!
-                app()->setBasePath(realpath(__DIR__.'/../../../'));
+                // For boost commands, set the base path to the package path
+                app()->setBasePath(package_path());
                 app()->useAppPath(base_path('src'));
 
                 config()->set('boost.code_environments.claude_code.guidelines_path', base_path('CLAUDE.md'));

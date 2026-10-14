@@ -13,6 +13,11 @@ use function Orchestra\Sidekick\package_path;
 class WorkbenchServiceProvider extends ServiceProvider
 {
     /**
+     * @var bool Should the default workbench migrations be loaded? Set to false if you want custom migrations.
+     */
+    protected bool $shouldLoadMigrations = true;
+
+    /**
      * Register services.
      */
     public function register(): void
@@ -27,7 +32,9 @@ class WorkbenchServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $this->loadMigrationsFrom(__DIR__.'/../../../database/workbench/migrations');
+        if ($this->shouldLoadMigrations) {
+            $this->loadMigrationsFrom(__DIR__.'/../../../database/workbench/migrations');
+        }
 
         Event::listen(CommandStarting::class, function ($event) {
             if (str_starts_with($event->command, 'boost:')) {
